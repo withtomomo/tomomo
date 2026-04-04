@@ -1,0 +1,60 @@
+{
+  "name": "tomomo",
+  "description": "Build your AI agent team and do anything.",
+  "private": true,
+  "license": "MIT",
+  "author": "Tomomo",
+  "homepage": "https://tomomo.app",
+  "keywords": [
+    "ai",
+    "agent",
+    "team",
+    "launcher",
+    "claude",
+    "codex",
+    "gemini"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/withtomomo/tomomo.git"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "npm run clean --workspaces --if-present",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "npm run build --workspace=packages/core && npm run build --workspace=packages/cli && changeset publish",
+    "core:test": "npm run test -w @tomomo/core",
+    "core:build": "npm run build -w @tomomo/core",
+    "core:typecheck": "npm run typecheck -w @tomomo/core",
+    "cli:dev": "npm run dev -w @tomomo/cli",
+    "cli:test": "npm run test -w @tomomo/cli",
+    "cli:build": "npm run build -w @tomomo/cli",
+    "cli:typecheck": "npm run typecheck -w @tomomo/cli",
+    "desktop:dev": "npm run dev -w @tomomo/desktop",
+    "desktop:build": "npm run build -w @tomomo/desktop",
+    "desktop:typecheck": "npm run typecheck -w @tomomo/desktop",
+    "vscode:compile": "npm run compile -w @tomomo/vscode",
+    "vscode:package": "npm run package -w @tomomo/vscode",
+    "vscode:typecheck": "npm run typecheck -w @tomomo/vscode",
+    "website:dev": "npm run dev -w @tomomo/website",
+    "website:build": "npm run build -w @tomomo/website",
+    "website:typecheck": "npm run typecheck -w @tomomo/website"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "react",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "moduleDetection": "force",
+    "types": ["vscode", "node"]
+  },
+  "include": ["src/**/*", "webview/**/*"],
+  "exclude": ["dist", "node_modules"]
+}

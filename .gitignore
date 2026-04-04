@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+out/
+build/
+
+# Next.js
+.next/
+.vercel
+next-env.d.ts
+
+# Test
+coverage/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# IDE
+.vscode/settings.json
+.vscode/.debug.env
+.idea/
+
+# Env
+.env
+.env.local
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Electron
+packages/desktop/release/
+
+# VS Code extension
+*.vsix
+
+# Changesets
+.changeset/*.md
+!.changeset/config.json
+
+# Temp
+*.tmp
+*.bak
+*.pem
+*.key
+*.p12
+credentials.json
+*.tsbuildinfo
+
+# Claude
+.claude.local/
+.claude/settings.local.json
+.superpowers/

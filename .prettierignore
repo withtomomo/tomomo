@@ -1,0 +1,37 @@
+# General
+node_modules
+dist
+out
+build
+coverage
+*.min.js
+package-lock.json
+
+# Next.js
+.next/
+
+# Electron
+packages/desktop/release
+
+# VS Code extension
+*.vsix
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Reference files (standalone HTML, not project code)
+reference/
+
+# Assets
+assets/
+
+# Changesets
+.changeset/
+
+# Agent config and skills
+.claude/
+.agents/
+
+# Docs (generated plans and specs)
+docs/superpowers/plans/
+docs/superpowers/specs/

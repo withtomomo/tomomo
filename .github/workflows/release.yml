@@ -1,0 +1,250 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    outputs:
+      desktop-tag: ${{ steps.desktop-tag.outputs.tag }}
+      vscode-tag: ${{ steps.vscode-tag.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install latest npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: npm run version
+          title: "Version Packages"
+          commit: "Version Packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Publish
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          npm run clean
+          npm run build
+          npx changeset publish
+
+      - name: Create Tag and GitHub Release
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          VERSION=$(node -p "require('./packages/cli/package.json').version")
+          TAG="cli@$VERSION"
+          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+            git tag "$TAG"
+            git push origin "$TAG"
+            gh release create "$TAG" --title "$TAG" --generate-notes
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check Desktop version
+        id: desktop-tag
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          VERSION=$(node -p "require('./packages/desktop/package.json').version")
+          TAG="desktop@$VERSION"
+          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check VS Code extension version
+        id: vscode-tag
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          VERSION=$(node -p "require('./packages/vscode/package.json').version")
+          TAG="vscode@$VERSION"
+          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-desktop:
+    name: Build Desktop (${{ matrix.artifact }})
+    needs: release
+    if: needs.release.outputs.desktop-tag != ''
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            platform: mac
+            args: --arm64
+            artifact: mac-arm64
+          - os: macos-13
+            platform: mac
+            args: --x64
+            artifact: mac-x64
+          - os: ubuntu-latest
+            platform: linux
+            args: --x64
+            artifact: linux-x64
+          - os: windows-latest
+            platform: win
+            args: --x64
+            artifact: win-x64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build app
+        working-directory: packages/desktop
+        run: npx electron-vite build
+
+      - name: Package
+        working-directory: packages/desktop
+        run: npx electron-builder --${{ matrix.platform }} ${{ matrix.args }} --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.artifact }}
+          path: |
+            packages/desktop/dist/*.dmg
+            packages/desktop/dist/*.exe
+            packages/desktop/dist/*.AppImage
+          if-no-files-found: error
+
+  publish-desktop:
+    name: Publish Desktop Release
+    needs: [release, build-desktop]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: List artifacts
+        run: ls -la artifacts/
+
+      - name: Create tag and GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.release.outputs.desktop-tag }}
+        run: |
+          git tag "$TAG"
+          git push origin "$TAG"
+          gh release create "$TAG" --title "Tomomo Desktop ${TAG#desktop@}" --generate-notes --draft artifacts/*
+
+  build-vscode:
+    name: Build VS Code Extension (${{ matrix.target }})
+    needs: release
+    if: needs.release.outputs.vscode-tag != ''
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: darwin-arm64
+          - os: macos-13
+            target: darwin-x64
+          - os: ubuntu-latest
+            target: linux-x64
+          - os: windows-latest
+            target: win32-x64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build and package extension
+        working-directory: packages/vscode
+        run: |
+          npm run build
+          node scripts/package.js --target ${{ matrix.target }}
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-${{ matrix.target }}
+          path: packages/vscode/*.vsix
+          if-no-files-found: error
+
+  publish-vscode:
+    name: Publish VS Code Extension
+    needs: [release, build-vscode]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download all VSIX artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: vscode-*
+          merge-multiple: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Publish to VS Code Marketplace
+        run: npx @vscode/vsce publish --packagePath artifacts/*.vsix
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Create tag and GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.release.outputs.vscode-tag }}
+        run: |
+          git tag "$TAG"
+          git push origin "$TAG"
+          gh release create "$TAG" --title "Tomomo VS Code ${TAG#vscode@}" --generate-notes artifacts/*

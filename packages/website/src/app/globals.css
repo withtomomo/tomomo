@@ -1,0 +1,49 @@
+@import "tailwindcss";
+@import "@tomomo/ui/src/styles/theme.css";
+@source "../../../ui/src/**/*.tsx";
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-0);
+  color: var(--fg-1);
+  font-family: "Outfit", system-ui, sans-serif;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  overflow: auto;
+  overflow-x: hidden;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+}
+
+*:hover > ::-webkit-scrollbar-thumb {
+  background: var(--bg-3);
+}
+
+html[data-theme="light"] .dark-only {
+  display: none;
+}
+
+html:not([data-theme="light"]) .light-only {
+  display: none;
+}

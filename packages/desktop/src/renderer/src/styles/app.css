@@ -1,0 +1,19 @@
+/* https://tailwindcss.com/docs/installation/vite */
+@import "tailwindcss";
+/* https://tailwindcss.com/docs/detecting-classes-in-source-files */
+@source "../../../../../ui/src";
+/* https://github.com/withtomomo/tomomo/tree/main/packages/ui */
+@import "@tomomo/ui/src/styles/theme.css";
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+}

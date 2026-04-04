@@ -1,0 +1,116 @@
+:root {
+  --bg-0: #0c0c12;
+  --bg-1: #131319;
+  --bg-2: #1c1c25;
+  --bg-3: #262632;
+  --bg-4: #32323f;
+  --fg-1: #f0f0f5;
+  --fg-2: #a0a0b8;
+  --fg-3: #686880;
+  --fg-4: #484858;
+  --success: #5cb8a5;
+  --warning: #e8b44c;
+  --error: #e26856;
+  --accent: #7b8aff;
+  --accent-hover: #8e9bff;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-focus: 0 0 0 3px rgba(123, 138, 255, 0.3);
+}
+
+[data-theme="light"] {
+  --bg-0: #ffffff;
+  --bg-1: #f5f5f7;
+  --bg-2: #ededf0;
+  --bg-3: #e2e2e7;
+  --bg-4: #d5d5dc;
+  --fg-1: #111111;
+  --fg-2: #555555;
+  --fg-3: #888888;
+  --fg-4: #b0b0b0;
+  --success: #22c586;
+  --warning: #f5a623;
+  --error: #f25c54;
+  --accent: #5b6cff;
+  --accent-hover: #4a5ae8;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
+  --shadow-focus: 0 0 0 3px rgba(91, 108, 255, 0.25);
+}
+
+@theme {
+  --font-sans: "Outfit", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-bg-4: var(--bg-4);
+  --color-fg-1: var(--fg-1);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-fg-4: var(--fg-4);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+}
+
+body {
+  background-color: var(--bg-0);
+  color: var(--fg-1);
+  font-family: "Outfit", system-ui, sans-serif;
+  font-size: 15px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-4);
+}
+
+*:hover > ::-webkit-scrollbar-thumb,
+*:active > ::-webkit-scrollbar-thumb {
+  background: var(--bg-3);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*:hover {
+  scrollbar-color: var(--bg-3) transparent;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  select:not(:disabled),
+  summary {
+    cursor: pointer !important;
+  }
+}
