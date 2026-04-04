@@ -1,0 +1,85 @@
+{
+  "name": "@tomomo/vscode",
+  "displayName": "Tomomo",
+  "description": "Build your AI agent team and do anything.",
+  "version": "0.0.1",
+  "private": true,
+  "publisher": "tomomo",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/withtomomo/tomomo.git",
+    "directory": "packages/vscode"
+  },
+  "homepage": "https://tomomo.app",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "AI"
+  ],
+  "keywords": [
+    "ai",
+    "agent",
+    "claude",
+    "codex",
+    "tomomo",
+    "launcher"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "tomomo.open",
+        "title": "Tomomo: Open Here",
+        "icon": {
+          "light": "media/icon-light.svg",
+          "dark": "media/icon-dark.svg"
+        },
+        "category": "Tomomo"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "tomomo.open",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "compile": "node esbuild.js",
+    "build": "node esbuild.js --production",
+    "watch": "node esbuild.js --watch",
+    "package": "node scripts/package.js",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "vscode:prepublish": "npm run build",
+    "clean": "rm -rf dist *.vsix"
+  },
+  "dependencies": {
+    "@tomomo/core": "^0.0.1",
+    "@tomomo/ui": "^0.0.1",
+    "node-pty": "^1.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/vscode": "^1.95.0",
+    "@vscode/vsce": "^3.7.1",
+    "esbuild": "^0.27.4",
+    "lucide-react": "^1.7.0",
+    "postcss": "^8.5.8",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.1",
+    "eslint": "^10.0.3"
+  }
+}

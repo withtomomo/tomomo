@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "react",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "moduleDetection": "force"
+  },
+  "include": ["src/renderer/src/**/*", "src/shared/**/*"]
+}
