@@ -122,6 +122,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Build core
+        run: npm run build -w @tomomo/core
+
       - name: Build app
         working-directory: packages/desktop
         run: npx electron-vite build
@@ -198,6 +201,9 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      - name: Build core
+        run: npm run build -w @tomomo/core
 
       - name: Build and package extension
         working-directory: packages/vscode
