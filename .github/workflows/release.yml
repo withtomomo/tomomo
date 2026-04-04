@@ -48,6 +48,7 @@ jobs:
         if: steps.changesets.outputs.hasChangesets == 'false'
         run: |
           npm run clean
+          npm run build -w @tomomo/core
           npm run build
           npx changeset publish
 
