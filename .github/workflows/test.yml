@@ -16,4 +16,6 @@ jobs:
           node-version: 22
           cache: "npm"
       - run: npm ci
+      - name: Build core (required for workspace resolution)
+        run: npm run build -w @tomomo/core
       - run: npm test
