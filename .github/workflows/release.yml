@@ -241,12 +241,12 @@ jobs:
           node-version: 22
 
       - name: Publish to VS Code Marketplace
-        run: npx @vscode/vsce publish --packagePath artifacts/*.vsix
+        run: npx @vscode/vsce publish --packagePath artifacts/*.vsix || true
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
       - name: Publish to Open VSX (Cursor)
-        run: npx ovsx publish artifacts/*.vsix -p "$OVSX_PAT"
+        run: npx ovsx publish artifacts/*.vsix -p "$OVSX_PAT" || true
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
 
