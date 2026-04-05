@@ -5,6 +5,11 @@
   "private": true,
   "license": "MIT",
   "author": "Tomomo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/withtomomo/tomomo.git",
+    "directory": "packages/desktop"
+  },
   "main": "./out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev",
@@ -57,7 +62,9 @@
       }
     ],
     "publish": {
-      "provider": "github"
+      "provider": "github",
+      "owner": "withtomomo",
+      "repo": "tomomo"
     }
   },
   "dependencies": {

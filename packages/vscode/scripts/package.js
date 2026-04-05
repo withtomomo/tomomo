@@ -100,7 +100,11 @@ try {
     "--no-dependencies",
     ...process.argv.slice(2),
   ];
-  execFileSync("npx", args, { stdio: "inherit", cwd: root });
+  execFileSync("npx", args, {
+    stdio: "inherit",
+    cwd: root,
+    shell: process.platform === "win32",
+  });
 } finally {
   pkg.name = origName;
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
