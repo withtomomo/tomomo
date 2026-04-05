@@ -29,6 +29,7 @@
     "appId": "app.tomomo.desktop",
     "productName": "Tomomo",
     "icon": "resources/icon.png",
+    "artifactName": "tomomo-desktop-${version}-${arch}.${ext}",
     "mac": {
       "target": "dmg",
       "category": "public.app-category.developer-tools",
@@ -36,7 +37,8 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "resources/icon.ico"
+      "icon": "resources/icon.ico",
+      "artifactName": "tomomo-desktop-${version}-${arch}-setup.${ext}"
     },
     "linux": {
       "target": "AppImage",
@@ -44,8 +46,7 @@
     },
     "asar": true,
     "files": [
-      "out/**/*",
-      "!node_modules"
+      "out/**/*"
     ],
     "extraResources": [
       {

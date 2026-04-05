@@ -1,8 +1,6 @@
 # Tomomo for VS Code
 
-Tomomo lets you build, manage, and launch a team of AI coding agents right from your editor. Create agents with unique personalities, connect them to runtimes like Claude Code, Codex, or Gemini CLI, and run them in embedded terminals against any project in your workspace.
-
-![Tomomo screenshot](https://tomomo.app/images/vscode-screenshot.png)
+Build, manage, and launch a team of AI agents right from your editor. Create agents with unique personalities, connect them to runtimes like Claude Code, Codex, or Gemini CLI, and run them in embedded terminals against any project in your workspace.
 
 ## Features
 
@@ -19,7 +17,7 @@ Tomomo lets you build, manage, and launch a team of AI coding agents right from 
 ## Getting Started
 
 1. Install the Tomomo extension from the VS Code Marketplace.
-2. Open the command palette (`Cmd+Shift+P`) and run "Tomomo" to open the panel. Or click the Tomomo icon in the editor title bar.
+2. Open the command palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and run **Tomomo: Open Here**. Or click the Tomomo icon in the editor title bar.
 3. Create your first agent by choosing a name and runtime.
 4. Select a project directory and launch.
 
@@ -31,6 +29,5 @@ Tomomo lets you build, manage, and launch a team of AI coding agents right from 
 ## Links
 
 - [Website](https://tomomo.app)
-- [Documentation](https://tomomo.app/docs)
 - [GitHub](https://github.com/withtomomo/tomomo)
-- [CLI on npm](https://www.npmjs.com/package/@tomomo/cli)
+- [Report an issue](https://github.com/withtomomo/tomomo/issues)
