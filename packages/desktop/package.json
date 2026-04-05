@@ -46,8 +46,7 @@
     },
     "asar": true,
     "files": [
-      "out/**/*",
-      "!node_modules"
+      "out/**/*"
     ],
     "extraResources": [
       {
