@@ -60,7 +60,7 @@ jobs:
           if ! git rev-parse "$TAG" >/dev/null 2>&1; then
             git tag "$TAG"
             git push origin "$TAG"
-            gh release create "$TAG" --title "$TAG" --generate-notes
+            gh release create "$TAG" --title "Tomomo CLI $VERSION" --generate-notes
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -155,10 +155,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download all artifacts
+      - name: Download desktop artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+          pattern: desktop-*
           merge-multiple: true
 
       - name: List artifacts
@@ -171,7 +172,7 @@ jobs:
         run: |
           git tag "$TAG"
           git push origin "$TAG"
-          gh release create "$TAG" --title "Tomomo Desktop ${TAG#desktop@}" --generate-notes --draft artifacts/*
+          gh release create "$TAG" --title "Tomomo Desktop ${TAG#desktop@}" --generate-notes artifacts/*
 
   build-vscode:
     name: Build VS Code Extension (${{ matrix.target }})
