@@ -77,9 +77,10 @@ function createWindow(): BrowserWindow {
 if (process.platform === "darwin") {
   try {
     const userShell = process.env.SHELL || "/bin/zsh";
-    const shellPath = execFileSync(userShell, ["-l", "-c", "echo $PATH"], {
+    const shellPath = execFileSync(userShell, ["-l", "-i", "-c", "echo $PATH"], {
       encoding: "utf-8",
       timeout: 5000,
+      stdio: ["ignore", "pipe", "ignore"],
     }).trim();
     if (shellPath) {
       process.env.PATH = shellPath;
