@@ -3,6 +3,7 @@ import { createInterface } from "node:readline";
 import type { TomomoAdapter } from "../types";
 
 async function askConfirmation(prompt: string): Promise<boolean> {
+  if (!process.stdin.isTTY) return false;
   const rl = createInterface({ input: process.stdin, output: process.stdout });
   const answer = await new Promise<string>((resolve) => {
     rl.question(prompt, resolve);

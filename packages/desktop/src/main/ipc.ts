@@ -414,7 +414,6 @@ export function registerIpcHandlers(): void {
         skipPermissions: options?.skipPermissions,
         skipProject: options?.selfChat,
       });
-
       const win = BrowserWindow.fromWebContents(event.sender);
       if (!win) throw new Error("No window found");
 

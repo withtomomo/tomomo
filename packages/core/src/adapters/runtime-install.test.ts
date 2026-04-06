@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { EventEmitter } from "node:events";
 
 vi.mock("node:child_process", () => ({
@@ -48,14 +48,27 @@ function mockSpawnFailure(code: number = 1): void {
 }
 
 describe("tryInstallRuntime (trusted / built-in)", () => {
+  const originalIsTTY = process.stdin.isTTY;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    Object.defineProperty(process.stdin, "isTTY", {
+      value: true,
+      writable: true,
+    });
     vi.mocked(createInterface).mockReturnValue({
       question: vi.fn((_prompt: string, cb: (answer: string) => void) =>
         cb("y")
       ),
       close: vi.fn(),
     } as any);
+  });
+
+  afterEach(() => {
+    Object.defineProperty(process.stdin, "isTTY", {
+      value: originalIsTTY,
+      writable: true,
+    });
   });
 
   it("auto-installs when trusted and user confirms", async () => {
