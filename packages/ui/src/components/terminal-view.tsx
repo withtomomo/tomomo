@@ -171,9 +171,10 @@ export function TerminalView({ sessionId }: TerminalViewProps) {
 
   return (
     <div
-      ref={containerRef}
-      className="h-full w-full"
+      className="h-full w-full py-2 pr-0 pl-3"
       style={{ background: "#0c0c12" }}
-    />
+    >
+      <div ref={containerRef} className="h-full w-full" />
+    </div>
   );
 }
