@@ -52,18 +52,21 @@ export function Titlebar({
     activeView === "hub" && agents && agents.length > 0 && onAddAgent;
 
   return (
-    <div className="flex h-12 shrink-0 items-center px-4">
-      {/* Left: traffic lights spacer (draggable for window move) */}
-      <div className="w-[76px] shrink-0" style={dragStyle} />
+    // Entire titlebar is draggable. Interactive children opt out via noDragStyle
+    // so the OS natively handles drag-to-move and double-click-to-zoom
+    // (honoring System Settings > Desktop & Dock > Double-click title bar).
+    <div className="flex h-12 shrink-0 items-center px-4" style={dragStyle}>
+      {/* Left: traffic lights spacer (layout only, inherits drag) */}
+      <div className="w-[76px] shrink-0" />
       <span
         className="text-fg-1 text-base font-bold tracking-tight"
-        style={{ letterSpacing: "-0.02em", ...noDragStyle }}
+        style={{ letterSpacing: "-0.02em" }}
       >
         tomomo
       </span>
 
-      {/* Spacer (draggable for window move) */}
-      <div className="flex-1" style={dragStyle} />
+      {/* Flex spacer (inherits drag) */}
+      <div className="flex-1" />
 
       {/* Right: page actions + tabs + settings */}
       <div className="flex shrink-0 items-center gap-2" style={noDragStyle}>
