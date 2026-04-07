@@ -1,6 +1,6 @@
 {
   "name": "@tomomo/desktop",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Tomomo desktop app.",
   "private": true,
   "license": "MIT",
@@ -73,7 +73,7 @@
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@tomomo/core": "^0.0.1",
-    "@tomomo/ui": "^0.0.1",
+    "@tomomo/ui": "^0.0.2",
     "lucide-react": "^1.7.0",
     "node-pty": "^1.1.0",
     "react": "^19.2.4",
