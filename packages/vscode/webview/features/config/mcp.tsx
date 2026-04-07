@@ -10,12 +10,9 @@ import {
 } from "lucide-react";
 import { Button, Empty, useIpcQuery, useToast } from "@tomomo/ui";
 import { ipc } from "../../lib/ipc";
-import { Breadcrumb } from "../breadcrumb";
 
 interface McpProps {
   agentId: string;
-  onBack: () => void;
-  agentName: string;
   agentColor?: string;
 }
 
@@ -52,7 +49,7 @@ function deriveServerName(command: string): string {
   return pkg;
 }
 
-export function Mcp({ agentId, onBack, agentName, agentColor }: McpProps) {
+export function Mcp({ agentId, agentColor }: McpProps) {
   const { toast } = useToast();
   const { data: servers, refetch } = useIpcQuery<McpServerInfo[]>(
     () => ipc.mcp.list(agentId),
@@ -200,8 +197,6 @@ export function Mcp({ agentId, onBack, agentName, agentColor }: McpProps) {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <Breadcrumb title={`${agentName} / MCP`} onBack={onBack} />
-
       <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-3">
         <div className="flex items-center justify-between">
           <div className="text-fg-1 text-sm font-medium">MCP servers</div>

@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { ChevronRight, Folder, Brain } from "lucide-react";
 import { Empty, useIpcQuery } from "@tomomo/ui";
 import { ipc } from "../../lib/ipc";
-import { Breadcrumb } from "../breadcrumb";
 
 interface MemoryProps {
   agentId: string;
-  onBack: () => void;
-  agentName: string;
   agentColor?: string;
 }
 
@@ -69,12 +66,7 @@ function ProjectMemory({
   );
 }
 
-export function Memory({
-  agentId,
-  onBack,
-  agentName,
-  agentColor,
-}: MemoryProps) {
+export function Memory({ agentId, agentColor }: MemoryProps) {
   const { data: agentMemory, loading: memoryLoading } = useIpcQuery<
     string | null
   >(() => ipc.agents.memoryFull(agentId), [agentId]);
@@ -86,9 +78,6 @@ export function Memory({
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <Breadcrumb title={`${agentName} / Memory`} onBack={onBack} />
-
-      {/* Content */}
       <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-3">
         {memoryLoading ? (
           <div className="flex flex-1 items-center justify-center">

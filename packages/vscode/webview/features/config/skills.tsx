@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { Trash2, FolderOpen, ChevronRight, Zap, Download } from "lucide-react";
 import { Button, Empty, useIpcQuery, useToast } from "@tomomo/ui";
 import { ipc } from "../../lib/ipc";
-import { Breadcrumb } from "../breadcrumb";
 
 interface SkillsProps {
   agentId: string;
-  onBack: () => void;
-  agentName: string;
   agentColor?: string;
 }
 
@@ -18,12 +15,7 @@ interface SkillInfo {
   content: string;
 }
 
-export function Skills({
-  agentId,
-  onBack,
-  agentName,
-  agentColor,
-}: SkillsProps) {
+export function Skills({ agentId, agentColor }: SkillsProps) {
   const { toast } = useToast();
   const { data: skills, refetch } = useIpcQuery<SkillInfo[]>(
     () => ipc.agents.skillsList(agentId),
@@ -102,8 +94,6 @@ export function Skills({
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <Breadcrumb title={`${agentName} / Skills`} onBack={onBack} />
-
       <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-3">
         <div className="flex flex-col gap-1.5">
           <label className="text-fg-2 text-xs font-medium">

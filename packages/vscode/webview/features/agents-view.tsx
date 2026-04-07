@@ -262,8 +262,6 @@ export function AgentsView({
             >
               <Soul
                 agentId={selectedAgent.id}
-                onBack={() => setActiveTab("overview")}
-                agentName={selectedAgent.name}
                 agentColor={selectedColor}
               />
             </div>
@@ -272,8 +270,6 @@ export function AgentsView({
             >
               <Skills
                 agentId={selectedAgent.id}
-                onBack={() => setActiveTab("overview")}
-                agentName={selectedAgent.name}
                 agentColor={selectedColor}
               />
             </div>
@@ -282,8 +278,6 @@ export function AgentsView({
             >
               <Mcp
                 agentId={selectedAgent.id}
-                onBack={() => setActiveTab("overview")}
-                agentName={selectedAgent.name}
                 agentColor={selectedColor}
               />
             </div>
@@ -292,8 +286,6 @@ export function AgentsView({
             >
               <Memory
                 agentId={selectedAgent.id}
-                onBack={() => setActiveTab("overview")}
-                agentName={selectedAgent.name}
                 agentColor={selectedColor}
               />
             </div>
@@ -302,7 +294,6 @@ export function AgentsView({
             >
               <AgentSettings
                 agentId={selectedAgent.id}
-                onBack={() => setActiveTab("overview")}
                 agentName={selectedAgent.name}
                 agentColor={selectedColor}
                 onAgentUpdated={onRefetch}

@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { ChevronUp, ChevronDown, Trash2, Plus } from "lucide-react";
 import { Button, Select, useIpcQuery, useToast } from "@tomomo/ui";
 import { ipc } from "../../lib/ipc";
-import { Breadcrumb } from "../breadcrumb";
 import type { AgentConfig, QuickCommand } from "@tomomo/core";
 import type { RuntimeInfo } from "../../types";
 
 interface AgentSettingsProps {
   agentId: string;
-  onBack: () => void;
   agentName: string;
   agentColor?: string;
   onAgentUpdated?: () => void;
@@ -16,7 +14,6 @@ interface AgentSettingsProps {
 
 export function AgentSettings({
   agentId,
-  onBack,
   agentName,
   agentColor,
   onAgentUpdated,
@@ -165,8 +162,6 @@ export function AgentSettings({
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <Breadcrumb title={`${agentName} / Settings`} onBack={onBack} />
-
       <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-3">
         <div className="flex items-center justify-between">
           <div className="text-fg-1 text-sm font-medium">Configuration</div>
