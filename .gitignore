@@ -50,10 +50,6 @@ packages/desktop/release/
 # VS Code extension
 *.vsix
 
-# Changesets
-.changeset/*.md
-!.changeset/config.json
-
 # Temp
 *.tmp
 *.bak
