@@ -2,16 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Sparkles, PenLine } from "lucide-react";
 import { Button, Empty, useIpcQuery, useToast } from "@tomomo/ui";
 import { ipc } from "../../lib/ipc";
-import { Breadcrumb } from "../breadcrumb";
 
 interface SoulProps {
   agentId: string;
-  onBack: () => void;
-  agentName: string;
   agentColor?: string;
 }
 
-export function Soul({ agentId, onBack, agentName, agentColor }: SoulProps) {
+export function Soul({ agentId, agentColor }: SoulProps) {
   const { toast } = useToast();
   const { data: soulContent, loading } = useIpcQuery<string | null>(
     () => ipc.agents.soulRead(agentId),
@@ -50,8 +47,6 @@ export function Soul({ agentId, onBack, agentName, agentColor }: SoulProps) {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <Breadcrumb title={`${agentName} / Soul`} onBack={onBack} />
-
       <div className="flex flex-1 flex-col overflow-y-auto p-3">
         {loading ? (
           <div className="flex flex-1 items-center justify-center">

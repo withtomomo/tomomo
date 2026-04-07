@@ -21,8 +21,8 @@ function createWindow(): BrowserWindow {
     icon: iconPath,
     width: 1200,
     height: 800,
-    minWidth: 800,
-    minHeight: 600,
+    minWidth: 960,
+    minHeight: 640,
     // macOS: native traffic lights with inset positioning
     // Windows/Linux: native controls overlay on the right
     ...(isMac

@@ -260,49 +260,28 @@ export function AgentsView({
             <div
               className={`mt-3 flex flex-1 flex-col overflow-y-auto ${activeTab === "soul" ? "" : "hidden"}`}
             >
-              <Soul
-                agentId={selectedAgent.id}
-                onBack={() => setActiveTab("overview")}
-                agentName={selectedAgent.name}
-                agentColor={selectedColor}
-              />
+              <Soul agentId={selectedAgent.id} agentColor={selectedColor} />
             </div>
             <div
               className={`mt-3 flex flex-1 flex-col overflow-y-auto ${activeTab === "skills" ? "" : "hidden"}`}
             >
-              <Skills
-                agentId={selectedAgent.id}
-                onBack={() => setActiveTab("overview")}
-                agentName={selectedAgent.name}
-                agentColor={selectedColor}
-              />
+              <Skills agentId={selectedAgent.id} agentColor={selectedColor} />
             </div>
             <div
               className={`mt-3 flex flex-1 flex-col overflow-y-auto ${activeTab === "mcp" ? "" : "hidden"}`}
             >
-              <Mcp
-                agentId={selectedAgent.id}
-                onBack={() => setActiveTab("overview")}
-                agentName={selectedAgent.name}
-                agentColor={selectedColor}
-              />
+              <Mcp agentId={selectedAgent.id} agentColor={selectedColor} />
             </div>
             <div
               className={`mt-3 flex flex-1 flex-col overflow-y-auto ${activeTab === "memory" ? "" : "hidden"}`}
             >
-              <Memory
-                agentId={selectedAgent.id}
-                onBack={() => setActiveTab("overview")}
-                agentName={selectedAgent.name}
-                agentColor={selectedColor}
-              />
+              <Memory agentId={selectedAgent.id} agentColor={selectedColor} />
             </div>
             <div
               className={`mt-3 flex flex-1 flex-col overflow-y-auto ${activeTab === "settings" ? "" : "hidden"}`}
             >
               <AgentSettings
                 agentId={selectedAgent.id}
-                onBack={() => setActiveTab("overview")}
                 agentName={selectedAgent.name}
                 agentColor={selectedColor}
                 onAgentUpdated={onRefetch}

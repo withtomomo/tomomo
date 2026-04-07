@@ -130,87 +130,93 @@ export function CreateAgentScreen({
 
   // Step 1: Character pick (onboarding only)
   if (step === "pick") {
+    const selected = options[selectedIndex];
+    const selectedColor = selected?.character?.color;
+
     return (
-      <div className="flex flex-1 flex-col items-center overflow-y-auto p-4">
-        <h1 className="text-fg-1 mb-1 text-xl font-bold tracking-tight">
-          Choose your starter
-        </h1>
-        <p className="text-fg-2 mb-6 text-xs">Pick your first team member</p>
-
-        <div className="flex w-full items-center justify-center gap-3">
-          {options.map((opt, i) => {
-            const color = opt.character?.color || "#888";
-            const isSelected = i === selectedIndex;
-
-            return (
-              <button
-                key={opt.seed}
-                onClick={() => setSelectedIndex(i)}
-                className="flex flex-col items-center gap-2 border-none bg-transparent"
-              >
-                <div
-                  className="flex items-center justify-center overflow-hidden rounded-2xl transition-all duration-[200ms]"
-                  style={{
-                    background: color,
-                    width: isSelected ? 100 : 72,
-                    height: isSelected ? 140 : 100,
-                  }}
-                >
-                  <div
-                    className="flex items-center justify-center rounded-full"
-                    style={{
-                      width: isSelected ? 80 : 52,
-                      height: isSelected ? 80 : 52,
-                      background: "rgba(255,255,255,0.2)",
-                    }}
-                  >
-                    {opt.character ? (
-                      <CharacterSprite
-                        grid={opt.character.grid}
-                        color="#ffffff"
-                        size={opt.character.size}
-                        displaySize={isSelected ? 52 : 36}
-                        className="rounded-lg"
-                        animate={isSelected}
-                      />
-                    ) : (
-                      <div
-                        className="rounded-lg"
-                        style={{
-                          width: isSelected ? 52 : 36,
-                          height: isSelected ? 52 : 36,
-                          background: "rgba(255,255,255,0.15)",
-                        }}
-                      />
-                    )}
-                  </div>
-                </div>
-                <div
-                  className="rounded-full transition-all duration-[200ms]"
-                  style={{
-                    width: isSelected ? 6 : 4,
-                    height: isSelected ? 6 : 4,
-                    background: isSelected ? color : "var(--bg-3)",
-                  }}
-                />
-              </button>
-            );
-          })}
+      <div className="flex h-full flex-1 flex-col p-4">
+        <div className="pt-2 text-center">
+          <h1 className="text-fg-1 mb-1 text-xl font-bold tracking-tight">
+            Choose your starter
+          </h1>
+          <p className="text-fg-2 text-xs">Pick your first team member</p>
         </div>
 
-        {options[selectedIndex]?.character && (
-          <Button
-            className="mt-6 w-full"
-            style={{
-              background: options[selectedIndex]!.character!.color,
-              color: "#fff",
-            }}
-            onClick={handlePick}
-          >
-            Choose this one
-            <ArrowRight size={14} />
-          </Button>
-        )}
+        <div className="flex flex-1 items-center justify-center">
+          <div className="flex items-center justify-center gap-3">
+            {options.map((opt, i) => {
+              const color = opt.character?.color || "#888";
+              const isSelected = i === selectedIndex;
+
+              return (
+                <button
+                  key={opt.seed}
+                  onClick={() => setSelectedIndex(i)}
+                  className="flex cursor-pointer flex-col items-center gap-2 border-none bg-transparent"
+                >
+                  <div
+                    className="flex items-center justify-center overflow-hidden rounded-[20px] transition-all duration-[200ms]"
+                    style={{
+                      background: color,
+                      width: isSelected ? 120 : 80,
+                      height: isSelected ? 170 : 120,
+                    }}
+                  >
+                    <div
+                      className="flex items-center justify-center rounded-full transition-all duration-[200ms]"
+                      style={{
+                        width: isSelected ? 90 : 56,
+                        height: isSelected ? 90 : 56,
+                        background: "rgba(255,255,255,0.2)",
+                      }}
+                    >
+                      {opt.character ? (
+                        <CharacterSprite
+                          grid={opt.character.grid}
+                          color="#ffffff"
+                          size={opt.character.size}
+                          displaySize={isSelected ? 60 : 38}
+                          animate={isSelected}
+                        />
+                      ) : (
+                        <div
+                          className="rounded-lg"
+                          style={{
+                            width: isSelected ? 60 : 38,
+                            height: isSelected ? 60 : 38,
+                            background: "rgba(255,255,255,0.15)",
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div
+                    className="rounded-full transition-all duration-[200ms]"
+                    style={{
+                      width: isSelected ? 8 : 5,
+                      height: isSelected ? 8 : 5,
+                      background: isSelected ? color : "var(--bg-3)",
+                    }}
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <Button
+          className="mt-4 w-full"
+          style={
+            selectedColor
+              ? { background: selectedColor, color: "#fff" }
+              : undefined
+          }
+          onClick={handlePick}
+          disabled={!selected?.character}
+        >
+          Choose this one
+          <ArrowRight size={14} />
+        </Button>
       </div>
     );
   }
