@@ -305,72 +305,78 @@ export function CreateAgentScreen({
 
   // Step 2 in onboarding mode (inline, no breadcrumb)
   return (
-    <div className="flex flex-1 flex-col items-center overflow-y-auto p-4">
-      <h1 className="text-fg-1 mb-1 text-xl font-bold tracking-tight">
-        Name your agent
-      </h1>
-      <p className="text-fg-2 mb-6 text-xs">
-        You can shape its personality in your first chat
-      </p>
+    <div className="flex h-full flex-1 flex-col p-4">
+      <div className="pt-2 text-center">
+        <h1 className="text-fg-1 mb-1 text-xl font-bold tracking-tight">
+          Name your agent
+        </h1>
+        <p className="text-fg-2 text-xs">
+          You can shape its personality in your first chat
+        </p>
+      </div>
 
-      <div
-        className="flex items-center justify-center rounded-full transition-colors duration-[200ms]"
-        style={{ width: 120, height: 120, background: c || "var(--bg-2)" }}
-      >
+      <div className="flex flex-1 flex-col items-center justify-center gap-5">
         <div
           className="flex items-center justify-center rounded-full transition-colors duration-[200ms]"
-          style={{
-            width: 80,
-            height: 80,
-            background: c ? "rgba(255,255,255,0.2)" : "var(--bg-3)",
-          }}
+          style={{ width: 120, height: 120, background: c || "var(--bg-2)" }}
         >
-          {chosenCharacter ? (
-            <CharacterSprite
-              grid={chosenCharacter.grid}
-              color="#ffffff"
-              size={chosenCharacter.size}
-              displaySize={52}
-              className="rounded-xl"
-              animate={hasName}
-            />
-          ) : (
-            <span className="text-fg-4 text-xl font-light">?</span>
-          )}
+          <div
+            className="flex items-center justify-center rounded-full transition-colors duration-[200ms]"
+            style={{
+              width: 80,
+              height: 80,
+              background: c ? "rgba(255,255,255,0.2)" : "var(--bg-3)",
+            }}
+          >
+            {chosenCharacter ? (
+              <CharacterSprite
+                grid={chosenCharacter.grid}
+                color="#ffffff"
+                size={chosenCharacter.size}
+                displaySize={52}
+                className="rounded-xl"
+                animate={hasName}
+              />
+            ) : (
+              <span className="text-fg-4 text-xl font-light">?</span>
+            )}
+          </div>
         </div>
-      </div>
 
-      <div className="mt-5 w-full">
-        <label className="text-fg-2 mb-1 block text-xs font-medium">Name</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handleCreate();
-          }}
-          className="bg-bg-1 text-fg-1 placeholder:text-fg-4 focus:bg-bg-0 h-9 w-full rounded-full border-none px-4 text-sm transition-colors duration-[120ms] outline-none focus:shadow-[var(--shadow-focus)]"
-          placeholder="Name your agent..."
-          autoFocus
-        />
-      </div>
+        <div className="w-full">
+          <label className="text-fg-2 mb-1 block text-xs font-medium">
+            Name
+          </label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleCreate();
+            }}
+            className="bg-bg-1 text-fg-1 placeholder:text-fg-4 focus:bg-bg-0 h-9 w-full rounded-full border-none px-4 text-sm transition-colors duration-[120ms] outline-none focus:shadow-[var(--shadow-focus)]"
+            placeholder="Name your agent..."
+            autoFocus
+          />
+        </div>
 
-      <div className="mt-3 w-full">
-        <label className="text-fg-2 mb-1 block text-xs font-medium">
-          Runtime
-        </label>
-        <Select
-          value={runtime}
-          options={
-            runtimes.length > 0
-              ? runtimes.map((r) => ({
-                  value: r.name,
-                  label: r.available ? r.name : `${r.name} (not installed)`,
-                }))
-              : [{ value: "claude-code", label: "claude-code" }]
-          }
-          onChange={setRuntime}
-        />
+        <div className="w-full">
+          <label className="text-fg-2 mb-1 block text-xs font-medium">
+            Runtime
+          </label>
+          <Select
+            value={runtime}
+            options={
+              runtimes.length > 0
+                ? runtimes.map((r) => ({
+                    value: r.name,
+                    label: r.available ? r.name : `${r.name} (not installed)`,
+                  }))
+                : [{ value: "claude-code", label: "claude-code" }]
+            }
+            onChange={setRuntime}
+          />
+        </div>
       </div>
 
       <div className="mt-4 flex w-full items-center justify-between">
