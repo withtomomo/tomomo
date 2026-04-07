@@ -2,7 +2,7 @@
   "name": "@tomomo/vscode",
   "displayName": "Tomomo",
   "description": "Build your AI agent team and do anything.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "publisher": "tomomo",
   "license": "MIT",
@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@tomomo/core": "^0.0.1",
-    "@tomomo/ui": "^0.0.1",
+    "@tomomo/ui": "^0.0.2",
     "node-pty": "^1.1.0"
   },
   "devDependencies": {
