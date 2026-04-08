@@ -41,15 +41,14 @@ Layout for every intro step:
 [Back ←]          [step dots 1/6]          [Next → / Begin →]
 ```
 
-- Step 1 renders Tomo at 240 px as the narrator opening, idle-animated. Steps 2-6 do NOT render Tomo; each one owns its own larger design-system illustration instead, so the illustrations can carry the screen without competing with the mascot.
+- Tomo is the onboarding narrator and appears in every illustrated slide (steps 1-5). Step 1 shows Tomo alone, centered at 280 px, introducing himself. Steps 2-5 anchor Tomo at a consistent 150 px on the left of a fixed 560×300 slot while the feature visual sits on the right, so the whole intro reads as a guided tour with Tomo presenting each feature. Step 6 has no illustration at all: the title and body sit centered on their own as a calm "ready to begin" transition into the starter pick.
 - No page transitions between steps.
 - Step progress dots: 22×4 px rounded-full pills. Active is indigo `#5B6CFF`, inactive is bg-3.
 - Primary button is indigo full flat background, white text, rounded-full. Reads "Next" on steps 1-5, "Begin" on step 6.
 - Back is `ghost` variant, disabled on step 1.
 - Skip is a small text button top-right.
 - Keyboard: Enter / Space / → advance, ← / Esc go back, handler ignores inputs and textareas.
-- Illustrations use real `@tomomo/ui` atoms only (no custom SVG art, no gradients). Disable animation inside illustrations; only Tomo animates. Illustrations render at roughly 280-320 px wide.
-- Step 1 has no illustration (Tomo alone).
+- Illustrations use real `@tomomo/ui` atoms and lucide icons only (no custom SVG art, no gradients). Disable animation inside illustrations; only Tomo animates.
 
 ### Phase 2: Starter pick
 

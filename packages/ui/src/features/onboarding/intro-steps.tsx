@@ -5,15 +5,17 @@ import {
   RuntimeStackIllustration,
   PillarsIllustration,
   LaunchIllustration,
-  PickYourTeamIllustration,
 } from "./intro-illustrations";
 
-// Every intro step renders the same structure so title and body sit at the
-// exact same vertical position across all six slides:
+// Intro steps 1-5 render the same structure so title and body sit at the
+// exact same vertical position across all five illustrated slides:
 //   1. A fixed 560x300 illustration slot (SLOT_CLASS in intro-illustrations).
 //   2. A single-line text-4xl title.
 //   3. A text-lg body pinned to a 2-line minimum height so 1-line bodies
 //      reserve the same vertical space as 2-line bodies.
+// Step 6 is the exception: it intentionally skips the illustration slot so
+// the title + body sit centered in the intro content area, acting as a
+// clean "ready to begin" transition into the starter pick screen.
 // Every body MUST be two lines or fewer at the current max-w-md width.
 
 // Fixed 2-line vertical slot for the body, matching text-lg line-height
@@ -86,9 +88,11 @@ export function Step5LaunchAnywhere() {
 }
 
 export function Step6PickStarter() {
+  // No illustration on the final slide: the content area centers the title
+  // and body on its own, creating a calm "ready to begin" moment before
+  // the starter pick screen takes over.
   return (
     <>
-      <PickYourTeamIllustration />
       <div className={TITLE_CLASS}>Let's build your team</div>
       <div className={BODY_CLASS}>Pick your first partner and get started.</div>
     </>
