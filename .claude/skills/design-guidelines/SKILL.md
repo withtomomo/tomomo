@@ -54,7 +54,7 @@ Layout for every intro step:
 
 ### Phase 2: Starter pick
 
-Three rounded-[28px] containers side by side. Fixed trio of colors from `STARTER_COLORS`, ordered left-to-right: Red `#FF5555`, Indigo `#5B6CFF` (center, default-selected), Gold `#DDBB00`. Seeds are random per-onboarding but colors and positions are locked. Indigo at index 1 lands in the default `selectedIndex = 1` hero slot so the brand accent gets the largest animated card.
+Three rounded-[28px] containers side by side. Fixed trio of colors from `STARTER_COLORS`, ordered left-to-right: Red `#FF5555`, Indigo `#5B6CFF` (center, default-selected), Green `#44CC44`. Seeds are random per-onboarding but colors and positions are locked. Indigo at index 1 lands in the default `selectedIndex = 1` hero slot so the brand accent gets the largest animated card. Red and green flank as the other two legs of the RGB primary triad, giving the most hue-distinct 3-color selection the 8-color palette can produce.
 
 - Selected container: 220×340 px, full agent color background, 104 px character, filled dot below
 - Unselected: 160×260 px, muted background, 64 px character, empty dot
@@ -198,8 +198,10 @@ The onboarding starter pick always shows three characters in a fixed subset of t
 ```text
 #FF5555  Red       (left)
 #5B6CFF  Indigo    (center, brand accent, default-selected)
-#DDBB00  Gold      (right)
+#44CC44  Green     (right)
 ```
+
+This is the RGB primary triad: red at hue 0°, indigo at ~232°, green at 120°. Each color sits roughly 120° from its neighbors on the hue wheel, which is the most mathematically hue-distinct 3-color selection the 8-color palette can produce. It also matches the classic fire / water / grass starter parallel.
 
 Defined as `STARTER_COLORS` in `packages/core/src/character/character.ts` and exported from the browser-safe `@tomomo/core/character` subpath. Indigo sits at index 1 so `StarterPick`'s default `selectedIndex = 1` places the brand accent in the center hero slot, providing visual continuity from the indigo Tomo narrator in the intro. The CLI uses the same trio and the same order, so the brand palette stays consistent across every surface. Enforced via the `genCharacter(seed, { color })` API extension rather than retry-sampling, so starter shapes remain random while colors and positions are locked.
 

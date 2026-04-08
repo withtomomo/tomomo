@@ -19,7 +19,7 @@ A tight subset re-exporting only runtime values that are provably free of Node d
 Exports:
 
 - `CHARACTER_PALETTE`: the 8 canonical agent colors
-- `STARTER_COLORS`: the fixed Red / Indigo / Gold trio shown on the onboarding starter pick (indigo centered as the default-selected hero slot)
+- `STARTER_COLORS`: the fixed Red / Indigo / Green trio shown on the onboarding starter pick, ordered left-to-right with indigo centered as the default-selected hero slot (the three colors form the RGB primary triad)
 - `genCharacter(seed, options?)`: seeded character generator. Accepts an optional `{ color }` override without changing the grid shape (byte-stable RNG preserved)
 - `GenCharacterOptions`: type
 - `AGENT_NAMES`: curated list of short names used by auto-name generation

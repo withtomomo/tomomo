@@ -19,12 +19,14 @@ export const CHARACTER_PALETTE: string[] = [
 // it lands in the center slot that the StarterPick defaults to
 // (selectedIndex = 1), giving the brand accent the hero position and
 // providing visual continuity from the indigo Tomo narrator. Red and
-// Gold flank as warm bookends.
+// Green flank as the other two legs of the RGB primary triad, giving
+// the most hue-distinct trio the 8-color palette can produce and
+// matching the classic fire / water / grass starter parallel.
 // Keep in sync with STARTER_COLORS references in @tomomo/ui onboarding.
 export const STARTER_COLORS: readonly string[] = [
   "#FF5555", // Red (left)
   "#5B6CFF", // Indigo (center, brand accent, default-selected)
-  "#DDBB00", // Gold (right)
+  "#44CC44", // Green (right)
 ] as const;
 
 export interface GenCharacterOptions {

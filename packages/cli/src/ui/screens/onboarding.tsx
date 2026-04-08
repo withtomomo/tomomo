@@ -84,7 +84,7 @@ export function OnboardingScreen({ onComplete }: OnboardingProps) {
         setRuntimes(results);
 
         // Generate 3 starter characters with the same fixed trio as the
-        // visual apps (Red, Indigo, Gold) so the brand palette stays
+        // visual apps (Red, Indigo, Green) so the brand palette stays
         // consistent across every surface.
         const chars: CharacterOption[] = STARTER_COLORS.map((color) => {
           const seed = crypto.randomUUID();

@@ -88,10 +88,11 @@ describe("STARTER_COLORS", () => {
     expect(STARTER_COLORS).toHaveLength(3);
   });
 
-  it("includes red, indigo, and gold in that order", () => {
+  it("includes red, indigo, and green in that order", () => {
     // Indigo sits at index 1 so StarterPick's default selectedIndex=1
-    // lands on the brand accent in the center hero slot.
-    expect(STARTER_COLORS).toEqual(["#FF5555", "#5B6CFF", "#DDBB00"]);
+    // lands on the brand accent in the center hero slot. Red and green
+    // flank as the other two legs of the RGB primary triad.
+    expect(STARTER_COLORS).toEqual(["#FF5555", "#5B6CFF", "#44CC44"]);
   });
 
   it("has no duplicates", () => {

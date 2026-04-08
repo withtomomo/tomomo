@@ -30,7 +30,7 @@ Shared between `@tomomo/desktop` and `@tomomo/vscode`. Lives in `src/features/on
 
 ### `<OnboardingFlow />`
 
-The first-run orchestrator. Renders a 6-step visual intro narrated by Tomo (only on the user's first launch, gated by `introComplete` in the global config), then a 3-character starter pick in the fixed Red / Indigo / Gold trio with indigo centered in the default-selected hero slot, then a name-your-agent form with a prefilled editable suggestion from `generateAgentName(seed)`, then calls the parent-supplied `onCreateAgent` callback.
+The first-run orchestrator. Renders a 6-step visual intro narrated by Tomo (only on the user's first launch, gated by `introComplete` in the global config), then a 3-character starter pick in the fixed Red / Indigo / Green trio with indigo centered in the default-selected hero slot, then a name-your-agent form with a prefilled editable suggestion from `generateAgentName(seed)`, then calls the parent-supplied `onCreateAgent` callback.
 
 Props: `runtimes`, `onCreated`, `onCreateAgent`, plus optional `forceIntro` + `onClose` for the Settings "Replay intro" overlay. Replay never writes to persistence.
 
