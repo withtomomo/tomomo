@@ -1,5 +1,11 @@
 export { version } from "./version";
-export { genCharacter, CHARACTER_PALETTE } from "./character/character";
+export {
+  genCharacter,
+  CHARACTER_PALETTE,
+  STARTER_COLORS,
+} from "./character/character";
+export type { GenCharacterOptions } from "./character/character";
+export { generateAgentName, AGENT_NAMES } from "./character/names";
 export { renderCharacterToTerminal } from "./character/character-render";
 export { loadConfig, saveConfig } from "./agent/config";
 export {
@@ -25,7 +31,13 @@ export {
   slugifyName,
   agentExists,
 } from "./agent/agent";
-export { runOnboarding, isOnboarded, checkRuntimes } from "./agent/onboarding";
+export {
+  runOnboarding,
+  isOnboarded,
+  checkRuntimes,
+  hasSeenIntro,
+  markIntroComplete,
+} from "./agent/onboarding";
 export { parseGitHubSource, fetchAgentFiles } from "./github/github";
 export { resolveProjectHash, ensureProject } from "./project/project";
 export { storeSession, getLastSession } from "./project/sessions";

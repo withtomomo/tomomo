@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { genCharacter, CHARACTER_PALETTE } from "./character";
+import { genCharacter, CHARACTER_PALETTE, STARTER_COLORS } from "./character";
 
 describe("genCharacter", () => {
   it("returns an 18x18 grid", () => {
@@ -53,5 +53,54 @@ describe("genCharacter", () => {
         expect([0, 1, 2]).toContain(cell);
       });
     });
+  });
+});
+
+describe("genCharacter color override", () => {
+  it("uses the explicit color when provided", () => {
+    const result = genCharacter("test-agent", { color: "#FF9922" });
+    expect(result.color).toBe("#FF9922");
+  });
+
+  it("falls back to the palette pick when no color option is provided", () => {
+    const result = genCharacter("test-agent");
+    expect(CHARACTER_PALETTE).toContain(result.color);
+  });
+
+  it("produces an identical grid regardless of color override", () => {
+    const baseline = genCharacter("shape-stability-seed");
+    const overridden = genCharacter("shape-stability-seed", {
+      color: "#00BBAA",
+    });
+    expect(overridden.grid).toEqual(baseline.grid);
+    expect(overridden.size).toBe(baseline.size);
+  });
+
+  it("keeps the RNG sequence stable for backwards compatibility", () => {
+    // This snapshot guards against character shape drift for existing agents.
+    const result = genCharacter("regression-guard-seed-1");
+    expect(result.grid).toMatchSnapshot();
+  });
+});
+
+describe("STARTER_COLORS", () => {
+  it("contains exactly three colors", () => {
+    expect(STARTER_COLORS).toHaveLength(3);
+  });
+
+  it("includes red, indigo, and gold in that order", () => {
+    // Indigo sits at index 1 so StarterPick's default selectedIndex=1
+    // lands on the brand accent in the center hero slot.
+    expect(STARTER_COLORS).toEqual(["#FF5555", "#5B6CFF", "#DDBB00"]);
+  });
+
+  it("has no duplicates", () => {
+    expect(new Set(STARTER_COLORS).size).toBe(STARTER_COLORS.length);
+  });
+
+  it("only contains colors from CHARACTER_PALETTE", () => {
+    for (const c of STARTER_COLORS) {
+      expect(CHARACTER_PALETTE).toContain(c);
+    }
   });
 });

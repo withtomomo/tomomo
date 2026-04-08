@@ -20,8 +20,10 @@ export default defineConfig([
     ...shared,
     entry: {
       index: "src/index.ts",
-      // Client-safe entry for browser consumers (no Node.js deps)
-      character: "src/character/character.ts",
+      // Client-safe entry for browser consumers (no Node.js deps).
+      // Source of truth: src/character/index.ts barrel. Extend by editing
+      // that file, not by adding new entries here.
+      character: "src/character/index.ts",
     },
     clean: true,
     dts: true,

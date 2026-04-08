@@ -61,7 +61,12 @@ export const ipc = {
       window.api.installAdapter(npmPackage),
   },
   character: {
-    preview: (seed: string) => window.api.previewCharacter(seed),
+    preview: (seed: string, options?: { color?: string }) =>
+      window.api.previewCharacter(seed, options),
+  },
+  intro: {
+    hasSeen: () => window.api.hasSeenIntro(),
+    markSeen: () => window.api.markIntroSeen(),
   },
   app: {
     selectDirectory: () => window.api.selectDirectory(),

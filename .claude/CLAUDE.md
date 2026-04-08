@@ -49,6 +49,16 @@
 - No global npm installs. Adapters are self-contained in their own directory with isolated node_modules.
 - Skip permissions: adapters must check `ctx.skipPermissions` in `getSpawnConfig()` and pass the appropriate runtime flag (e.g., `--dangerously-skip-permissions` for Claude Code, `--full-auto` for Codex, `--yolo` for Gemini CLI).
 
+## Onboarding
+
+- First-run flow: `@tomomo/ui`'s `<OnboardingFlow />` renders a 6-step visual intro narrated by Tomo (the brand mascot), then a 3-character starter pick in the fixed trio Red / Indigo / Gold (indigo centered as the default-selected hero slot), then a name-your-agent screen with a prefilled editable name from `generateAgentName(seed)`, then creates the agent via a parent-supplied callback. Used by desktop and vscode; CLI has its own Ink-based terminal onboarding that reuses `generateAgentName` for the name prefill.
+- Persistence: `~/.tomomo/config.json` has two flags. `onboardingComplete` means tomomo dirs have been initialized. `introComplete` means the visual intro has been seen or skipped. Both are in `GlobalConfigSchema`. Read via `hasSeenIntro()` / written via `markIntroComplete()` from `@tomomo/core`. `runOnboarding()` sets both, so CLI users do not see the visual intro when they later open desktop or vscode.
+- Migration: `loadConfig` has a read-side default that sets `introComplete` from `onboardingComplete` when the field is missing from an older config, so existing users do not see the intro on upgrade. No version bump.
+- Replay: Settings has a "Replay intro" button in the Help section. Clicking it opens `<OnboardingFlow forceIntro />` as an overlay. Replay never writes to `introComplete`. The flag stays persisted as `true` throughout.
+- Tomo: the brand mascot. Grid lives in `packages/ui/src/components/tomo-sprite.tsx` as `TOMO_GRID`, extracted pixel-exact from `assets/icon-dark.png` (12x13 native, padded to 18x18). Color locked to indigo `#5B6CFF`. Rendered via `<TomoSprite />` wrapping the existing `CharacterSprite` animation pipeline. Eye cells are tagged as value `2` for blink animation. One intentional 1-pixel asymmetry at row 10 col 4 vs col 13 matches the brand icon; do not symmetrize it.
+- Starter trio: `STARTER_COLORS` in `packages/core/src/character/character.ts`, ordered left-to-right Red `#FF5555`, Indigo `#5B6CFF` (center), Gold `#DDBB00`. Indigo sits at index 1 so `StarterPick`'s default `selectedIndex = 1` lands on the brand accent in the hero slot. Enforced via the `genCharacter(seed, { color })` API extension, not retry-sampling.
+- Name generation: `AGENT_NAMES` in `packages/core/src/character/names.ts` is a curated ~150-name list with hard rules (2-5 chars, `/^[A-Z][a-z]+$/`, no trademarks, no recognizable franchise characters). `generateAgentName(seed)` uses a FNV-1a hash separate from the character RNG so name and shape do not correlate predictably.
+
 ## Agent Accounts (MCP)
 
 - Each agent can have its own MCP servers configured in `mcp.json` at the agent root
@@ -65,7 +75,7 @@
 ## Repo Structure
 
 - npm workspaces monorepo
-- `packages/core`: core business logic, types (Zod schemas), adapters, memory system, launch orchestration. Private package (`@tomomo/core`), never published. Used by all other packages.
+- `packages/core`: core business logic, types (Zod schemas), adapters, memory system, launch orchestration. Private package (`@tomomo/core`), never published. Used by all other packages. Ships two entry points. The default `@tomomo/core` is Node-only and used by the CLI, desktop main process, and vscode extension host. The `@tomomo/core/character` subpath is browser-safe and used by `@tomomo/ui`, the desktop renderer, and the vscode webview. It re-exports `CHARACTER_PALETTE`, `STARTER_COLORS`, `genCharacter`, `GenCharacterOptions`, `AGENT_NAMES`, and `generateAgentName`. Runtime values imported into a renderer or webview MUST come from `@tomomo/core/character` to avoid pulling Node deps into the browser bundle. Type-only imports from `@tomomo/core` are always safe.
 - `packages/cli`: the CLI, published as `@tomomo/cli` on npm. Thin shell: commands, Ink TUI, bin entry point. Re-exports `@tomomo/core` for backward compatibility.
 - `packages/ui`: shared React components, stores, hooks, styles, and IPC context. Private package (`@tomomo/ui`), never published. Used by both desktop and VS Code.
 - `packages/desktop`: Electron + React + Vite + Tailwind v4 desktop app. Imports shared atoms from `@tomomo/ui`, owns its own page layouts and features.
@@ -77,10 +87,11 @@
 ## Shared UI Package (packages/ui)
 
 - Private workspace package. Never published.
-- Contains: atomic components (Button, Badge, Modal, Dropdown, Input, Select, Toast, ToggleGroup, Pill, Empty, SearchBar, CharacterSprite, TerminalView), stores (theme, toast, settings), hooks (useIpcQuery), styles (theme.css with CSS variables and Tailwind theme tokens), types (TerminalSession), lib (storage), and IPC context (UiIpc interface, IpcProvider, useUiIpc).
+- Contains: atomic components (Button, Badge, Modal, Dropdown, Input, Select, Toast, ToggleGroup, Pill, Empty, SearchBar, CharacterSprite, TomoSprite, TerminalView), stores (theme, toast, settings), hooks (useIpcQuery), styles (theme.css with CSS variables and Tailwind theme tokens), types (TerminalSession), lib (storage), and IPC context (UiIpc interface, IpcProvider, useUiIpc).
+- Also contains the shared onboarding feature at `src/features/onboarding/` (`OnboardingFlow`, `CreateAgentScreen`, plus internal intro step + illustration components). Used by both desktop and vscode via the root barrel. This is the one exception to the "only leaf components and shared utilities" rule: the whole onboarding FSM lives here because it must be byte-identical across both apps.
 - Barrel export from `src/index.ts`. No `exports` field needed (private workspace package).
-- Desktop provides `UiIpc` via Electron's preload bridge. VS Code provides `UiIpc` via postMessage. Website does not use IPC.
-- Page-level layouts and features stay in each app package. Only leaf components and shared utilities belong in packages/ui.
+- `UiIpc` has three namespaces: required `terminal`, optional `intro` (hasSeen / markSeen), optional `character` (preview with optional color override). Desktop provides all three via Electron's preload bridge; vscode provides all three via postMessage. Website uses terminal-free consumers only.
+- Page-level layouts and features stay in each app package. Only leaf components, shared utilities, and the shared onboarding feature belong in packages/ui.
 - Tailwind v4 content detection: consumers MUST add `@source` pointing to `packages/ui/src` in their CSS entry point. Tailwind ignores workspace symlinks in node_modules by default.
 - Website imports: server components must import UI atoms directly from their file path (e.g., `@tomomo/ui/src/components/button`) to avoid the barrel export pulling in client-only modules. Client components can use the barrel export (`@tomomo/ui`).
 

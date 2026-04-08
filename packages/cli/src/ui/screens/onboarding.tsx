@@ -9,6 +9,8 @@ import {
   createAgent,
   slugifyName,
   agentExists,
+  generateAgentName,
+  STARTER_COLORS,
 } from "@tomomo/core";
 import type { RuntimeCheckResult, CharacterData } from "@tomomo/core";
 
@@ -25,12 +27,14 @@ type Step = "init" | "runtimes" | "pick" | "name" | "creating" | "done";
 
 function TextInputField({
   placeholder,
+  initialValue = "",
   onSubmit,
 }: {
   placeholder: string;
+  initialValue?: string;
   onSubmit: (value: string) => void;
 }) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(initialValue);
 
   useInput((input, key) => {
     if (key.return) {
@@ -79,13 +83,14 @@ export function OnboardingScreen({ onComplete }: OnboardingProps) {
         const results = await checkRuntimes();
         setRuntimes(results);
 
-        // Generate 3 random characters
-        const chars: CharacterOption[] = [];
-        for (let i = 0; i < 3; i++) {
+        // Generate 3 starter characters with the same fixed trio as the
+        // visual apps (Red, Indigo, Gold) so the brand palette stays
+        // consistent across every surface.
+        const chars: CharacterOption[] = STARTER_COLORS.map((color) => {
           const seed = crypto.randomUUID();
-          const character = genCharacter(seed);
-          chars.push({ seed, character });
-        }
+          const character = genCharacter(seed, { color });
+          return { seed, character };
+        });
         setOptions(chars);
         setStep("runtimes");
       } catch (err) {
@@ -223,6 +228,7 @@ export function OnboardingScreen({ onComplete }: OnboardingProps) {
         <Box marginTop={1}>
           <Text>Name: </Text>
           <TextInputField
+            initialValue={generateAgentName(chosenOption!.seed)}
             placeholder="e.g. WebDev, Reviewer, Writer..."
             onSubmit={handleNameSubmit}
           />

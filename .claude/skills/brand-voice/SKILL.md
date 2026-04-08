@@ -60,7 +60,7 @@ Agents are not tools. They are partners. The difference is personality. A tool d
 # BAD:  "Error: Authentication required for runtime"
 # GOOD: "Not signed in to Claude Code. Run 'claude login' first."
 
-# Onboarding
+# Onboarding (CLI)
 # BAD:  "Initializing Tomomo environment..."
 # GOOD: "Welcome to Tomomo! Let's get you set up."
 
@@ -72,6 +72,57 @@ Agents are not tools. They are partners. The difference is personality. A tool d
 # BAD:  "Session Management"     GOOD: "Hub"
 # BAD:  "Template Repository"    GOOD: "Templates"
 # BAD:  "No agents configured"   GOOD: "No agents yet"
+```
+
+## Canonical Onboarding Copy (Desktop and VS Code)
+
+The 6-step visual intro narrated by Tomo is the gold standard for how the voice translates into product copy. Use it as a reference when writing any new onboarding, welcome, or first-run text.
+
+Each step has a big title (text-4xl bold) and a body (text-lg, fg-2, max 2 lines). Short, direct, partner-focused. No jargon. No hedging.
+
+```text
+Step 1: Hello!
+  Welcome to the world of Tomomo. I'm Tomo, and I'll show you around.
+
+Step 2: Meet your agents
+  Agents are partners, not tools. Each one has a personality,
+  a voice, and a way of working all its own.
+
+Step 3: Powered by anything
+  Your agents run on Claude Code, Codex, Gemini, or whatever you've
+  got installed. Tomomo handles the rest.
+
+Step 4: What makes them yours
+  Soul, skills, memory. You shape the soul. You teach the skills.
+  They keep the memories from every project.
+
+Step 5: Launch them anywhere
+  On any project, any folder, any repo. They code, write, research,
+  plan, create. Do anything.
+
+Step 6: Let's build your team
+  Pick your first partner and get started.
+```
+
+Why these work:
+- Rule 1 (Partners, not tools): Step 2 opens with the rule verbatim.
+- Rule 3 (Alive, not generic): Step 2 closes with "all its own". Step 4 closes with "yours".
+- Rule 4 (Action, not features): Step 5 is pure action verbs. No mention of "persistent memory system".
+- Rule 5 (Universal, not dev-only): "code, write, research, plan, create" and "Do anything".
+- Rule 6 (Simple and bold): every body is two short sentences or fewer.
+
+CTAs in the flow:
+- `Next →` on steps 1-5, `Begin →` on step 6
+- Secondary: `Back ←` ghost button, disabled on step 1
+- Tertiary: `Skip intro` small text button top-right
+- Starter pick CTA: `Choose this one →`
+- Name screen CTA: `Get started →` (first-run) or `Create →` (add-mode)
+- Success toast: `{Name} is ready!`
+
+Replay intro entry point in Settings Help:
+```
+Replay intro
+Watch the welcome tour again     [Replay]
 ```
 
 ## Quick Test

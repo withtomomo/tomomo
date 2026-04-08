@@ -15,6 +15,19 @@ export async function isOnboarded(): Promise<boolean> {
   return config.onboardingComplete;
 }
 
+export async function hasSeenIntro(): Promise<boolean> {
+  const config = await loadConfig();
+  return config.introComplete;
+}
+
+export async function markIntroComplete(): Promise<void> {
+  const config = await loadConfig();
+  if (!config.introComplete) {
+    config.introComplete = true;
+    await saveConfig(config);
+  }
+}
+
 export async function checkRuntimes(): Promise<RuntimeCheckResult[]> {
   const adapterNames = listBuiltInAdapters();
   const results: RuntimeCheckResult[] = [];
@@ -50,10 +63,19 @@ export async function initializeTomomoDir(): Promise<void> {
 
 export async function runOnboarding(): Promise<void> {
   await initializeTomomoDir();
-  // Mark config as onboarded for backward compatibility
   const config = await loadConfig();
+  let dirty = false;
   if (!config.onboardingComplete) {
     config.onboardingComplete = true;
+    dirty = true;
+  }
+  // CLI users who finish terminal onboarding should not see the visual intro
+  // when they later open the desktop or vscode apps.
+  if (!config.introComplete) {
+    config.introComplete = true;
+    dirty = true;
+  }
+  if (dirty) {
     await saveConfig(config);
   }
 }

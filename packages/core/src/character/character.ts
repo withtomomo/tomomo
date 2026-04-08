@@ -14,6 +14,24 @@ export const CHARACTER_PALETTE: string[] = [
   "#FF4488", // Pink
 ];
 
+// The fixed trio shown on the onboarding starter pick, ordered
+// left-to-right as they appear in the UI. Indigo sits at index 1 so
+// it lands in the center slot that the StarterPick defaults to
+// (selectedIndex = 1), giving the brand accent the hero position and
+// providing visual continuity from the indigo Tomo narrator. Red and
+// Gold flank as warm bookends.
+// Keep in sync with STARTER_COLORS references in @tomomo/ui onboarding.
+export const STARTER_COLORS: readonly string[] = [
+  "#FF5555", // Red (left)
+  "#5B6CFF", // Indigo (center, brand accent, default-selected)
+  "#DDBB00", // Gold (right)
+] as const;
+
+export interface GenCharacterOptions {
+  // When provided, overrides the random palette pick without changing the grid shape.
+  color?: string;
+}
+
 // Seeded PRNG using FNV-1a hash for uniform distribution.
 // This is the canonical character generation algorithm.
 function seededRng(seed: string): () => number {
@@ -41,7 +59,10 @@ function get(arr: number[][], y: number, x: number): number {
   return arr[y]![x]!;
 }
 
-export function genCharacter(seed: string): CharacterData {
+export function genCharacter(
+  seed: string,
+  options?: GenCharacterOptions
+): CharacterData {
   const S = 18;
   const rng = seededRng(seed);
   const r = () => rng();
@@ -51,7 +72,10 @@ export function genCharacter(seed: string): CharacterData {
     // arr is always non-empty in this algorithm
     return arr[idx] as T;
   };
-  const color = pick(CHARACTER_PALETTE);
+  // Always call pick(CHARACTER_PALETTE) so the RNG sequence stays byte-stable
+  // for existing agents even when an override is provided.
+  const paletteColor = pick(CHARACTER_PALETTE);
+  const color = options?.color ?? paletteColor;
 
   const TMP = 28;
   const TH = 14;

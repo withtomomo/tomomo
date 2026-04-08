@@ -28,7 +28,15 @@ interface TomomoApi {
       seed?: string;
     }
   ): Promise<AgentConfig>;
-  previewCharacter(seed: string): Promise<CharacterData>;
+  previewCharacter(
+    seed: string,
+    options?: { color?: string }
+  ): Promise<CharacterData>;
+
+  // Onboarding intro state
+  hasSeenIntro(): Promise<boolean>;
+  markIntroSeen(): Promise<void>;
+
   installAgent(source: string, name?: string): Promise<AgentConfig>;
   exportAgent(id: string): Promise<string | null>;
   getAgentDir(id: string): Promise<string>;

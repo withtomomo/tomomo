@@ -18,8 +18,9 @@ Build, manage, and launch a team of AI agents right from your editor. Create age
 
 1. Install the Tomomo extension from the VS Code Marketplace.
 2. Open the command palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and run **Tomomo: Open Here**. Or click the Tomomo icon in the editor title bar.
-3. Create your first agent by choosing a name and runtime.
-4. Select a project directory and launch.
+3. Walk through the brief welcome tour on first launch. Tomo, the Tomomo mascot, explains what an agent is and how the app works. You can skip it and revisit it any time from Settings.
+4. Pick your starter character from the trio and name your first agent.
+5. Select a project directory and launch.
 
 ## Requirements
 

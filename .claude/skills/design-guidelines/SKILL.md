@@ -20,6 +20,63 @@ Key rules:
 - **No borders.** Differentiation comes from background color contrast (bg-0 through bg-4), not borders or dividers.
 - **No tabs.** Navigation uses action cards that open breadcrumb views, not tab bars.
 
+## Onboarding Flow
+
+The first-run experience lives in `@tomomo/ui` as `<OnboardingFlow />` and is shared byte-identically between desktop and vscode. It is a five-phase finite state machine (`loading` → `intro` → `starter` → `name` → `creating`).
+
+### Phase 1: Intro narrative (6 steps)
+
+Only shown on the user's first launch, gated by `introComplete` in `~/.tomomo/config.json`. Skippable via a "Skip intro" button top-right. Replayable later from Settings Help without rewriting persistence.
+
+Layout for every intro step:
+
+```
+[step dots 1/6]                          [Skip intro]
+
+            Tomo 180 px, centered, idle-animated
+
+        [optional illustration row, real design-system atoms]
+
+               Title (text-4xl, bold, tracking-tight)
+              Body (text-lg, fg-2, max-width 440 px)
+
+[Back ←]                            [Next → / Begin →]
+```
+
+- Tomo stays mounted across all 6 steps so the idle animation is continuous. No page transitions.
+- Step progress dots: 22×4 px rounded-full pills. Active is indigo `#5B6CFF`, inactive is bg-3.
+- Primary button is indigo full flat background, white text, rounded-full. Reads "Next" on steps 1-5, "Begin" on step 6.
+- Back is `ghost` variant, disabled on step 1.
+- Skip is a small text button top-right.
+- Keyboard: Enter / Space / → advance, ← / Esc go back, handler ignores inputs and textareas.
+- Illustrations use real `@tomomo/ui` atoms only (no custom SVG art, no gradients). Disable animation inside illustrations; only Tomo animates. Illustrations render at roughly 280-320 px wide.
+- Step 1 has no illustration (Tomo alone).
+
+### Phase 2: Starter pick
+
+Three rounded-[28px] containers side by side. Fixed trio of colors from `STARTER_COLORS`, ordered left-to-right: Red `#FF5555`, Indigo `#5B6CFF` (center, default-selected), Gold `#DDBB00`. Seeds are random per-onboarding but colors and positions are locked. Indigo at index 1 lands in the default `selectedIndex = 1` hero slot so the brand accent gets the largest animated card.
+
+- Selected container: 220×340 px, full agent color background, 104 px character, filled dot below
+- Unselected: 160×260 px, muted background, 64 px character, empty dot
+- Click or `←` / `→` arrow keys navigate, Enter selects
+- Primary CTA "Choose this one" uses the selected agent's color as background
+- Back from the name screen preserves the trio (seeds owned by the parent orchestrator)
+
+### Phase 3: Name your agent
+
+Standard form layout with:
+- 160×160 px character circle at the top in the chosen agent's color
+- Name input, prefilled with an auto-generated suggestion from `generateAgentName(seed)`, focused and pre-selected on mount
+- Runtime Select, with three distinct states the component MUST handle:
+  1. `runtimesLoaded === false`: render a "Loading runtimes..." placeholder, disable Create
+  2. `runtimesLoaded && runtimes.length === 0`: render an error state "No runtimes installed. Install Claude Code, Codex, or Gemini CLI to continue." in bg-error/10 + text-error
+  3. Normal: render the Select, enable Create once the user has picked
+- Back (or Cancel in add-mode) on the left, primary CTA on the right using the chosen agent's color as background
+
+### Add-agent screen
+
+Same `NameYourAgent` form, wrapped in `<CreateAgentScreen />` with a Shuffle button top-right. Shuffle re-rolls the random seed, which regenerates the suggested name unless the user has already edited the field.
+
 ## Architecture: Two Views
 
 ### 1. Agent Hero
@@ -133,6 +190,18 @@ Dark mode:
 ```
 
 Each agent gets one color from this palette, derived from its `seed` (UUID v4 stored in agent.json). The seed is generated at creation time and never changes, so renaming an agent does not affect its color. Fallback: `agent.seed || agent.id` for backward compatibility.
+
+### Starter Trio (Onboarding)
+
+The onboarding starter pick always shows three characters in a fixed subset of the palette, ordered left-to-right as they render on screen:
+
+```text
+#FF5555  Red       (left)
+#5B6CFF  Indigo    (center, brand accent, default-selected)
+#DDBB00  Gold      (right)
+```
+
+Defined as `STARTER_COLORS` in `packages/core/src/character/character.ts` and exported from the browser-safe `@tomomo/core/character` subpath. Indigo sits at index 1 so `StarterPick`'s default `selectedIndex = 1` places the brand accent in the center hero slot, providing visual continuity from the indigo Tomo narrator in the intro. The CLI uses the same trio and the same order, so the brand palette stays consistent across every surface. Enforced via the `genCharacter(seed, { color })` API extension rather than retry-sampling, so starter shapes remain random while colors and positions are locked.
 
 ### Bold Flat Color Usage
 
@@ -435,6 +504,10 @@ When a runtime is not installed, the AgentChat shows a centered panel (bg-1, rou
 
 Centered placeholder. Icon (icon-xl, fg-4), title (text-base, semibold, fg-2), description (text-sm, fg-3). Optional action button below.
 
+### Settings Help Section
+
+The Settings modal (desktop) and Settings panel (vscode) both include a collapsible "Help" section at the bottom with a single row: "Replay intro" with a ghost "Replay" button. Clicking it closes Settings and opens `<OnboardingFlow forceIntro />` as an overlay. Replay never rewrites `introComplete`, the flag stays persisted as `true` throughout.
+
 ## Character Pixel Art and Animation
 
 Characters animate with real pixel movement at 10 FPS. No CSS transforms, no opacity fading. Every frame modifies actual pixel positions in the grid. Animations only run when `animate={true}`.
@@ -445,11 +518,21 @@ Characters use canvas rendering (not SVG) for pixel-perfect display with `image-
 
 Character sizes:
 
-| Context         | Size  |
-| --------------- | ----- |
-| Sidebar compact | 40px  |
-| Hero overview   | 72px  |
-| Breadcrumb mini | 24px  |
+| Context                     | Size  |
+| --------------------------- | ----- |
+| Sidebar compact             | 40px  |
+| Hero overview               | 72px  |
+| Breadcrumb mini             | 24px  |
+| Onboarding starter selected | 104px |
+| Onboarding starter idle     | 64px  |
+| Onboarding name screen      | 72px  |
+| Intro narrator (Tomo)       | 180px |
+
+### Tomo, the brand mascot
+
+Tomo is a dedicated character component wrapping `CharacterSprite`. The grid lives in `packages/ui/src/components/tomo-sprite.tsx` as `TOMO_GRID`, extracted pixel-exact from `assets/icon-dark.png` (12×13 native, padded to 18×18). Color is locked to indigo `#5B6CFF` and is not overridable. Eye cells are tagged as value `2` so the blink animation works. One intentional 1-pixel asymmetry at row 10 col 4 vs col 13 matches the brand icon; do not symmetrize it.
+
+Use `<TomoSprite size={180} animate />` when you need the mascot anywhere (intro narrator, About screen, branded empty states). Do not regenerate Tomo from a seed; always use the fixed grid.
 
 Animations (layered with independent random timers per character):
 
@@ -547,22 +630,25 @@ border-radius: 9999px;
 
 ## Component Inventory
 
-| Component       | Purpose                                         |
-| --------------- | ----------------------------------------------- |
-| AgentHero       | Primary view with overview + breadcrumb modes   |
-| AgentChat       | Embedded terminal chat panel in hero view       |
-| AgentSidebar    | Compact right sidebar for agent switching       |
-| Titlebar        | Top nav with Agents/Hub pill toggle             |
-| Button          | rounded-full, no shadows, transition-colors     |
-| Badge           | rounded-full, semibold                          |
-| SearchBar       | rounded-full, bg-2                              |
-| DropdownMenu    | rounded-xl, shadow-lg (floating only)           |
-| Modal           | rounded-2xl, shadow-xl (floating only)          |
-| Toast           | rounded-full pill, shadow-lg (floating only)    |
-| ToggleGroup     | rounded-full container + active/inactive pills  |
-| CharacterSprite | Transparent bg, canvas animated or SVG static   |
-| useRuntimes     | Hook: runtime status, install, community add    |
-| Empty           | Centered placeholder state                      |
+| Component         | Purpose                                         |
+| ----------------- | ----------------------------------------------- |
+| AgentHero         | Primary view with overview + breadcrumb modes   |
+| AgentChat         | Embedded terminal chat panel in hero view       |
+| AgentSidebar      | Compact right sidebar for agent switching       |
+| Titlebar          | Top nav with Agents/Hub pill toggle             |
+| OnboardingFlow    | Shared 5-phase FSM: intro + starter + name      |
+| CreateAgentScreen | Shared add-mode screen with Shuffle re-roll     |
+| Button            | rounded-full, no shadows, transition-colors     |
+| Badge             | rounded-full, semibold                          |
+| SearchBar         | rounded-full, bg-2                              |
+| DropdownMenu      | rounded-xl, shadow-lg (floating only)           |
+| Modal             | rounded-2xl, shadow-xl (floating only)          |
+| Toast             | rounded-full pill, shadow-lg (floating only)    |
+| ToggleGroup       | rounded-full container + active/inactive pills  |
+| CharacterSprite   | Transparent bg, canvas animated or SVG static   |
+| TomoSprite        | Brand mascot wrapping CharacterSprite           |
+| useRuntimes       | Hook: runtime status, install, community add    |
+| Empty             | Centered placeholder state                      |
 
 ## What NOT to Do
 

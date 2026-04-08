@@ -16,6 +16,8 @@ export { Pill } from "./components/pill";
 export { Empty } from "./components/empty-state";
 export { SearchBar } from "./components/search-bar";
 export { CharacterSprite } from "./components/character-sprite";
+export { TomoSprite } from "./components/tomo-sprite";
+export type { TomoSpriteProps } from "./components/tomo-sprite";
 export {
   TerminalView,
   disposeTerminal,
@@ -43,3 +45,9 @@ export {
 
 // Types
 export type { TerminalSession } from "./types/terminal";
+
+// Onboarding feature (shared between desktop and vscode)
+export { OnboardingFlow } from "./features/onboarding/onboarding-flow";
+export type { OnboardingFlowProps } from "./features/onboarding/onboarding-flow";
+export { CreateAgentScreen } from "./features/onboarding/create-agent-screen";
+export type { CreateAgentScreenProps } from "./features/onboarding/create-agent-screen";

@@ -173,12 +173,16 @@ export const ipc = {
       request("runtimes.installAdapter", npmPackage),
   },
   character: {
-    preview: (seed: string) =>
-      request("character.preview", seed) as Promise<{
+    preview: (seed: string, options?: { color?: string }) =>
+      request("character.preview", seed, options) as Promise<{
         grid: number[][];
         color: string;
         size: number;
       }>,
+  },
+  intro: {
+    hasSeen: () => request("intro.hasSeen") as Promise<boolean>,
+    markSeen: () => request("intro.markSeen") as Promise<void>,
   },
   app: {
     selectDirectory: () =>
@@ -235,5 +239,12 @@ export const uiIpc: UiIpc = {
       ipc.terminal.resize(sessionId, cols, rows),
     onData: (cb) => ipc.terminal.onData(cb),
     onExit: (cb) => ipc.terminal.onExit(cb),
+  },
+  intro: {
+    hasSeen: () => ipc.intro.hasSeen(),
+    markSeen: () => ipc.intro.markSeen(),
+  },
+  character: {
+    preview: (seed, options) => ipc.character.preview(seed, options),
   },
 };

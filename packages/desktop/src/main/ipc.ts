@@ -63,9 +63,22 @@ export function registerIpcHandlers(): void {
     }
   );
 
-  ipcMain.handle("character:preview", async (_event, seed: string) => {
+  ipcMain.handle(
+    "character:preview",
+    async (_event, seed: string, options?: { color?: string }) => {
+      const core = await getCore();
+      return core.genCharacter(seed, options);
+    }
+  );
+
+  ipcMain.handle("intro:hasSeen", async () => {
     const core = await getCore();
-    return core.genCharacter(seed);
+    return core.hasSeenIntro();
+  });
+
+  ipcMain.handle("intro:markSeen", async () => {
+    const core = await getCore();
+    await core.markIntroComplete();
   });
 
   ipcMain.handle(

@@ -40,6 +40,7 @@ export const GlobalConfigSchema = z.object({
   }),
   adapters: z.record(AdapterRegistryEntrySchema),
   onboardingComplete: z.boolean(),
+  introComplete: z.boolean(),
   logLevel: z.string(),
 });
 
@@ -80,6 +81,7 @@ export const DEFAULT_CONFIG: z.infer<typeof GlobalConfigSchema> = {
   },
   adapters: {},
   onboardingComplete: false,
+  introComplete: false,
   logLevel: "error",
 };
 

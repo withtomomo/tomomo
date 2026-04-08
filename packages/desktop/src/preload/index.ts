@@ -26,8 +26,13 @@ const api = {
       seed?: string;
     }
   ) => ipcRenderer.invoke("agents:create", name, options),
-  previewCharacter: (seed: string) =>
-    ipcRenderer.invoke("character:preview", seed),
+  previewCharacter: (seed: string, options?: { color?: string }) =>
+    ipcRenderer.invoke("character:preview", seed, options),
+
+  // Onboarding intro state
+  hasSeenIntro: () => ipcRenderer.invoke("intro:hasSeen"),
+  markIntroSeen: () => ipcRenderer.invoke("intro:markSeen"),
+
   installAgent: (source: string, name?: string) =>
     ipcRenderer.invoke("agents:install", source, name),
   exportAgent: (id: string) => ipcRenderer.invoke("agents:export", id),
