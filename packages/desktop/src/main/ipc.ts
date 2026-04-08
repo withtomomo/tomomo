@@ -63,13 +63,10 @@ export function registerIpcHandlers(): void {
     }
   );
 
-  ipcMain.handle(
-    "character:preview",
-    async (_event, seed: string, options?: { color?: string }) => {
-      const core = await getCore();
-      return core.genCharacter(seed, options);
-    }
-  );
+  ipcMain.handle("character:preview", async (_event, seed: string) => {
+    const core = await getCore();
+    return core.genCharacter(seed);
+  });
 
   ipcMain.handle("intro:hasSeen", async () => {
     const core = await getCore();

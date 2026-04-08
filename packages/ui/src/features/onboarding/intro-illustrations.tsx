@@ -140,7 +140,7 @@ function TomoNarrator({ side = "left" }: { side?: "left" | "right" }) {
   );
 }
 
-// Step 1 — Hello
+// Step 1: Hello
 // Tomo at full narrator scale, centered. The only slide where Tomo stands
 // alone, because this is the moment he introduces himself. Uses an
 // overflow-visible slot so he can render larger than the 300 px slot
@@ -157,7 +157,7 @@ export function HelloIllustration() {
   );
 }
 
-// Step 2 — Meet your agents
+// Step 2: Meet your agents
 // Tomo on the left as the narrator, presenting a cluster of four other
 // agents arranged in a soft 2x2 grid on the right. Each agent uses a
 // different palette color and a gentle rotation so the team reads as a
@@ -174,7 +174,7 @@ export function AgentsLineupIllustration() {
     size: number;
     rotateDeg: number;
   }> = [
-    // Upper-left — the giant
+    // Upper-left: the giant
     {
       grid: MIRA_GRID,
       color: MIRA_ORANGE,
@@ -183,7 +183,7 @@ export function AgentsLineupIllustration() {
       size: 138,
       rotateDeg: -9,
     },
-    // Upper-right — the smallest
+    // Upper-right: the smallest
     {
       grid: KAI_GRID,
       color: KAI_TEAL,
@@ -192,7 +192,7 @@ export function AgentsLineupIllustration() {
       size: 76,
       rotateDeg: 14,
     },
-    // Lower-left — small-medium
+    // Lower-left: small-medium
     {
       grid: RIO_GRID,
       color: RIO_PINK,
@@ -201,7 +201,7 @@ export function AgentsLineupIllustration() {
       size: 86,
       rotateDeg: 11,
     },
-    // Lower-right — medium-large
+    // Lower-right: medium-large
     {
       grid: SUN_GRID,
       color: SUN_PURPLE,
@@ -238,7 +238,7 @@ export function AgentsLineupIllustration() {
   );
 }
 
-// Step 3 — Powered by anything
+// Step 3: Powered by anything
 // Tomo on the right, three runtime pills stacked vertically on the left.
 // The top and bottom pills sit flush; the middle codex pill shifts right
 // toward Tomo so the stack forms a soft arrow pointing at him. The visual
@@ -286,7 +286,7 @@ export function RuntimeStackIllustration() {
   );
 }
 
-// Step 4 — What makes them yours
+// Step 4: What makes them yours
 // Tomo on the left, three labeled pillar circles scattered across the
 // right side. The circles use the indigo-tinted stats-container pattern
 // so they stay neutral chrome and don't compete with Tomo's color. Each
@@ -303,7 +303,7 @@ export function PillarsIllustration() {
     cy: number;
     size: number;
   }> = [
-    // Soul — upper left of the cluster, medium
+    // Soul: upper left of the cluster, medium
     {
       icon: (s) => <Heart size={s} className="text-fg-1" strokeWidth={1.75} />,
       label: "Soul",
@@ -311,7 +311,7 @@ export function PillarsIllustration() {
       cy: 80,
       size: 90,
     },
-    // Skills — lower middle, the largest (the "main" pillar visually)
+    // Skills: lower middle, the largest (the "main" pillar visually)
     {
       icon: (s) => (
         <Sparkles size={s} className="text-fg-1" strokeWidth={1.75} />
@@ -321,7 +321,7 @@ export function PillarsIllustration() {
       cy: 190,
       size: 110,
     },
-    // Memory — upper right, smaller
+    // Memory: upper right, smaller
     {
       icon: (s) => (
         <BookOpen size={s} className="text-fg-1" strokeWidth={1.75} />
@@ -369,7 +369,7 @@ export function PillarsIllustration() {
   );
 }
 
-// Step 5 — Launch them anywhere
+// Step 5: Launch them anywhere
 // Tomo on the right, one Hub-style terminal card on the left showing a
 // real-looking launch session. The card mirrors the real Tomomo Hub
 // terminal: an agent-color header strip with character + name + runtime
@@ -426,7 +426,7 @@ export function LaunchIllustration() {
           transform: "rotate(2deg)",
         }}
       >
-        {/* Header strip — bold flat indigo, matching real Hub terminal headers */}
+        {/* Header strip: bold flat indigo, matching real Hub terminal headers */}
         <div
           className="flex items-center gap-2.5 px-4 py-3"
           style={{ background: INDIGO }}
@@ -453,7 +453,7 @@ export function LaunchIllustration() {
             style={{ background: "#ffffff" }}
           />
         </div>
-        {/* Terminal body — neutral bg-1, multi-line monospace output */}
+        {/* Terminal body: neutral bg-1, multi-line monospace output */}
         <div className="flex flex-col gap-1 px-4 py-4 font-mono text-[11px] leading-[1.4]">
           {lines.map((line, li) => (
             <div key={li}>

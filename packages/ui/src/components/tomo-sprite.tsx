@@ -11,7 +11,7 @@ import { CharacterSprite } from "./character-sprite";
 //
 // Exported so intro illustrations can render Tomo in a non-indigo context
 // (e.g., white-on-indigo inside a terminal card header). Prefer TomoSprite
-// for any standalone Tomo rendering — it locks the color to indigo.
+// for any standalone Tomo rendering since it locks the color to indigo.
 export const TOMO_GRID: number[][] = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

@@ -61,8 +61,7 @@ export const ipc = {
       window.api.installAdapter(npmPackage),
   },
   character: {
-    preview: (seed: string, options?: { color?: string }) =>
-      window.api.previewCharacter(seed, options),
+    preview: (seed: string) => window.api.previewCharacter(seed),
   },
   intro: {
     hasSeen: () => window.api.hasSeenIntro(),

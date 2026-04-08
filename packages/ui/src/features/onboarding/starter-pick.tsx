@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ArrowRight } from "lucide-react";
-import { STARTER_COLORS, generateAgentName } from "@tomomo/core/character";
+import { generateAgentName } from "@tomomo/core/character";
 import { CharacterSprite } from "../../components/character-sprite";
 import { Button } from "../../components/button";
 import { useUiIpc } from "../../ipc-context";
@@ -19,7 +19,9 @@ export interface StarterOption {
 
 export interface StarterPickProps {
   // Seeds owned by the parent so Back navigation preserves the trio across
-  // re-mounts. The parent passes exactly STARTER_COLORS.length seeds.
+  // re-mounts. The parent is responsible for passing exactly three seeds
+  // whose natural seed-derived colors are all distinct, so the three
+  // starter cards never share a color.
   seeds: string[];
   onPick: (option: StarterOption) => void;
 }
@@ -45,9 +47,8 @@ export function StarterPick({ seeds, onPick }: StarterPickProps) {
     (async () => {
       try {
         const results = await Promise.all(
-          seeds.map(async (seed, i) => {
-            const color = STARTER_COLORS[i]!;
-            const character = await preview(seed, { color });
+          seeds.map(async (seed) => {
+            const character = await preview(seed);
             return { seed, character };
           })
         );

@@ -25,7 +25,7 @@ Outputs to `out/`. Use `electron-builder` for platform-specific distributables (
 
 ## IPC bridge
 
-The preload script exposes a typed `window.api` that the renderer facade (`src/renderer/src/lib/ipc.ts`) wraps into a clean `ipc` object. The renderer then constructs a `desktopUiIpc` implementing the `UiIpc` interface from `@tomomo/ui` with three namespaces: `terminal`, `intro` (hasSeen / markSeen), and `character` (preview with optional color override).
+The preload script exposes a typed `window.api` that the renderer facade (`src/renderer/src/lib/ipc.ts`) wraps into a clean `ipc` object. The renderer then constructs a `desktopUiIpc` implementing the `UiIpc` interface from `@tomomo/ui` with three namespaces: `terminal`, `intro` (hasSeen / markSeen), and `character` (seed-based preview).
 
 ## Onboarding
 

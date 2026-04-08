@@ -50,7 +50,7 @@ const desktopUiIpc: UiIpc = {
     markSeen: () => ipc.intro.markSeen(),
   },
   character: {
-    preview: (seed, options) => ipc.character.preview(seed, options),
+    preview: (seed) => ipc.character.preview(seed),
   },
 };
 

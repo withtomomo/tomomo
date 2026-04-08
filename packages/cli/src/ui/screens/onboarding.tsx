@@ -10,7 +10,6 @@ import {
   slugifyName,
   agentExists,
   generateAgentName,
-  STARTER_COLORS,
 } from "@tomomo/core";
 import type { RuntimeCheckResult, CharacterData } from "@tomomo/core";
 
@@ -83,14 +82,20 @@ export function OnboardingScreen({ onComplete }: OnboardingProps) {
         const results = await checkRuntimes();
         setRuntimes(results);
 
-        // Generate 3 starter characters with the same fixed trio as the
-        // visual apps (Red, Indigo, Green) so the brand palette stays
-        // consistent across every surface.
-        const chars: CharacterOption[] = STARTER_COLORS.map((color) => {
+        // Generate 3 starter characters whose natural seed-derived colors
+        // are all distinct, so the three cards never share a color and
+        // the color the user sees matches the color the agent will have
+        // after creation. Three unique colors out of the 8-color palette
+        // is trivially fast; the attempt cap is just a safety net.
+        const chars: CharacterOption[] = [];
+        const usedColors = new Set<string>();
+        for (let attempts = 0; attempts < 200 && chars.length < 3; attempts++) {
           const seed = crypto.randomUUID();
-          const character = genCharacter(seed, { color });
-          return { seed, character };
-        });
+          const character = genCharacter(seed);
+          if (usedColors.has(character.color)) continue;
+          usedColors.add(character.color);
+          chars.push({ seed, character });
+        }
         setOptions(chars);
         setStep("runtimes");
       } catch (err) {

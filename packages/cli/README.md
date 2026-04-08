@@ -248,7 +248,6 @@ import {
   genCharacter,
   renderCharacterToTerminal,
   CHARACTER_PALETTE,
-  STARTER_COLORS,
   AGENT_NAMES,
   generateAgentName,
 

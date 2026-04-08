@@ -78,8 +78,7 @@ const handlers: Record<string, Handler> = {
   "character.preview": async (args) => {
     const core = await getCore();
     const seed = requireArg<string>(args, 0, "seed");
-    const options = args[1] as { color?: string } | undefined;
-    return core.genCharacter(seed, options);
+    return core.genCharacter(seed);
   },
 
   "intro.hasSeen": async () => {

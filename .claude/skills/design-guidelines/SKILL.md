@@ -52,7 +52,7 @@ Layout for every intro step:
 
 ### Phase 2: Starter pick
 
-Three rounded-[28px] containers side by side. Fixed trio of colors from `STARTER_COLORS`, ordered left-to-right: Red `#FF5555`, Indigo `#5B6CFF` (center, default-selected), Green `#44CC44`. Seeds are random per-onboarding but colors and positions are locked. Indigo at index 1 lands in the default `selectedIndex = 1` hero slot so the brand accent gets the largest animated card. Red and green flank as the other two legs of the RGB primary triad, giving the most hue-distinct 3-color selection the 8-color palette can produce.
+Three rounded-[28px] containers side by side. Three random starters, one per column. The orchestrator rolls random seeds until it has three whose natural seed-derived colors are all distinct, so the user never sees two columns sharing a color, and the color shown on the card is the color the agent will actually have after creation. The center column is the default-selected hero slot (`selectedIndex = 1`).
 
 - Selected container: 220×340 px, full agent color background, 104 px character, filled dot below
 - Unselected: 160×260 px, muted background, 64 px character, empty dot
@@ -191,17 +191,12 @@ Each agent gets one color from this palette, derived from its `seed` (UUID v4 st
 
 ### Starter Trio (Onboarding)
 
-The onboarding starter pick always shows three characters in a fixed subset of the palette, ordered left-to-right as they render on screen:
+The onboarding starter pick shows three random characters whose natural seed-derived colors are all distinct. There is no fixed palette subset and no forced color override. The orchestrator rolls random UUID seeds and keeps the ones whose `genCharacter(seed).color` hasn't been seen yet, stopping at three. This guarantees two properties:
 
-```text
-#FF5555  Red       (left)
-#5B6CFF  Indigo    (center, brand accent, default-selected)
-#44CC44  Green     (right)
-```
+- The three cards never share a color (so the trio is always visually legible).
+- The color shown on the card is exactly the color the agent will have after creation, because the preview and the final agent both derive their color from the same seed with no override in between.
 
-This is the RGB primary triad: red at hue 0°, indigo at ~232°, green at 120°. Each color sits roughly 120° from its neighbors on the hue wheel, which is the most mathematically hue-distinct 3-color selection the 8-color palette can produce. It also matches the classic fire / water / grass starter parallel.
-
-Defined as `STARTER_COLORS` in `packages/core/src/character/character.ts` and exported from the browser-safe `@tomomo/core/character` subpath. Indigo sits at index 1 so `StarterPick`'s default `selectedIndex = 1` places the brand accent in the center hero slot, providing visual continuity from the indigo Tomo narrator in the intro. The CLI uses the same trio and the same order, so the brand palette stays consistent across every surface. Enforced via the `genCharacter(seed, { color })` API extension rather than retry-sampling, so starter shapes remain random while colors and positions are locked.
+The center column (`selectedIndex = 1`) is the default-selected hero slot. Both the shared React onboarding in `packages/ui` and the Ink CLI onboarding in `packages/cli` use this rejection-sampling approach.
 
 ### Bold Flat Color Usage
 

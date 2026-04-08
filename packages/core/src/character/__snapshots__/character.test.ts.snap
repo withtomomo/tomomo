@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`genCharacter color override > keeps the RNG sequence stable for backwards compatibility 1`] = `
+exports[`genCharacter RNG stability > keeps the RNG sequence stable for backwards compatibility 1`] = `
 [
   [
     0,

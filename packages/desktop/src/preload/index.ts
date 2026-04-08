@@ -26,8 +26,8 @@ const api = {
       seed?: string;
     }
   ) => ipcRenderer.invoke("agents:create", name, options),
-  previewCharacter: (seed: string, options?: { color?: string }) =>
-    ipcRenderer.invoke("character:preview", seed, options),
+  previewCharacter: (seed: string) =>
+    ipcRenderer.invoke("character:preview", seed),
 
   // Onboarding intro state
   hasSeenIntro: () => ipcRenderer.invoke("intro:hasSeen"),

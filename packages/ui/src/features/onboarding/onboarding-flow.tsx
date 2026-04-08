@@ -1,11 +1,37 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { genCharacter } from "@tomomo/core/character";
 import { Button } from "../../components/button";
 import { useUiIpc } from "../../ipc-context";
 import { useToast } from "../../stores/toast-store";
 import { INTRO_STEPS } from "./intro-steps";
 import { StarterPick, type StarterOption } from "./starter-pick";
 import { NameYourAgent } from "./name-your-agent";
+
+// Rolls random seeds until it collects three whose natural seed-derived
+// colors are all distinct. Three unique colors out of the 8-color palette
+// is trivially fast in expectation (a handful of rolls); the attempt cap
+// is just a safety net so a broken PRNG can never spin forever. Throws if
+// the cap is hit with fewer than three seeds so the StarterPick never
+// renders a short trio with the default selectedIndex out of range.
+function generateDistinctStarterSeeds(): string[] {
+  const seeds: string[] = [];
+  const colors = new Set<string>();
+  for (let attempts = 0; attempts < 200 && seeds.length < 3; attempts++) {
+    const seed = crypto.randomUUID();
+    const { color } = genCharacter(seed);
+    if (!colors.has(color)) {
+      seeds.push(seed);
+      colors.add(color);
+    }
+  }
+  if (seeds.length !== 3) {
+    throw new Error(
+      `generateDistinctStarterSeeds: expected 3 distinct-color seeds, got ${seeds.length}`
+    );
+  }
+  return seeds;
+}
 
 type Phase = "loading" | "intro" | "starter" | "name" | "creating";
 
@@ -43,15 +69,16 @@ export function OnboardingFlow({
   const [introStep, setIntroStep] = useState(0);
 
   // Seeds for the starter trio. Generated once on mount and kept stable
-  // across Back navigation so the user always sees the same three characters.
-  // Host apps must NOT unmount/remount this component mid-flow or the trio
-  // will reshuffle. Both desktop and vscode currently render it inline at the
-  // root, which preserves identity. If you add route-based mounting, lift
-  // these seeds into the parent.
-  const starterSeeds = useMemo(
-    () => [crypto.randomUUID(), crypto.randomUUID(), crypto.randomUUID()],
-    []
-  );
+  // across Back navigation so the user always sees the same three
+  // characters. The three seeds are guaranteed to produce three distinct
+  // natural colors, so every starter pick shows three visually different
+  // agents and the color the user sees is the color the agent will have
+  // after creation.
+  // Host apps must NOT unmount/remount this component mid-flow or the
+  // trio will reshuffle. Both desktop and vscode currently render it
+  // inline at the root, which preserves identity. If you add route-based
+  // mounting, lift these seeds into the parent.
+  const starterSeeds = useMemo(() => generateDistinctStarterSeeds(), []);
   const [chosenStarter, setChosenStarter] = useState<StarterOption | null>(
     null
   );

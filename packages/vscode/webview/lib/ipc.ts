@@ -173,8 +173,8 @@ export const ipc = {
       request("runtimes.installAdapter", npmPackage),
   },
   character: {
-    preview: (seed: string, options?: { color?: string }) =>
-      request("character.preview", seed, options) as Promise<{
+    preview: (seed: string) =>
+      request("character.preview", seed) as Promise<{
         grid: number[][];
         color: string;
         size: number;
@@ -245,6 +245,6 @@ export const uiIpc: UiIpc = {
     markSeen: () => ipc.intro.markSeen(),
   },
   character: {
-    preview: (seed, options) => ipc.character.preview(seed, options),
+    preview: (seed) => ipc.character.preview(seed),
   },
 };

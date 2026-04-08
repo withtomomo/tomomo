@@ -16,12 +16,12 @@ interface IntroIpc {
 }
 
 // Character preview used by the onboarding starter pick and create agent
-// screen. Returns a deterministic character for a seed, with an optional
-// color override that bypasses palette sampling.
+// screen. Returns a deterministic character for a seed. The color is
+// derived from the seed, so the previewed color always matches the
+// eventual agent color after creation.
 interface CharacterIpc {
   preview(
-    seed: string,
-    options?: { color?: string }
+    seed: string
   ): Promise<{ grid: number[][]; color: string; size: number }>;
 }
 

@@ -30,7 +30,7 @@ Shared between `@tomomo/desktop` and `@tomomo/vscode`. Lives in `src/features/on
 
 ### `<OnboardingFlow />`
 
-The first-run orchestrator. Renders a 6-step visual intro narrated by Tomo (only on the user's first launch, gated by `introComplete` in the global config), then a 3-character starter pick in the fixed Red / Indigo / Green trio with indigo centered in the default-selected hero slot, then a name-your-agent form with a prefilled editable suggestion from `generateAgentName(seed)`, then calls the parent-supplied `onCreateAgent` callback.
+The first-run orchestrator. Renders a 6-step visual intro narrated by Tomo (only on the user's first launch, gated by `introComplete` in the global config), then a 3-character starter pick of three random agents whose natural seed-derived colors are all distinct, then a name-your-agent form with a prefilled editable suggestion from `generateAgentName(seed)`, then calls the parent-supplied `onCreateAgent` callback. The starter seeds are generated with rejection sampling so the previewed color always matches the final agent color after creation.
 
 Props: `runtimes`, `onCreated`, `onCreateAgent`, plus optional `forceIntro` + `onClose` for the Settings "Replay intro" overlay. Replay never writes to persistence.
 
@@ -40,7 +40,7 @@ The sidebar "Add agent" screen. Single random character with a Shuffle button to
 
 Props: `runtimes`, `onCreated`, `onCancel`, `onCreateAgent`.
 
-Both components require the host app to wire up `UiIpc.intro` (for the persistence flag) and `UiIpc.character` (for character previews with color override).
+Both components require the host app to wire up `UiIpc.intro` (for the persistence flag) and `UiIpc.character` (for seed-based character previews).
 
 ## Stores
 
@@ -56,7 +56,7 @@ useIpcQuery, useUiIpc
 
 - `terminal` (required): write / resize / onData / onExit
 - `intro` (optional): hasSeen / markSeen
-- `character` (optional): preview(seed, { color? })
+- `character` (optional): preview(seed)
 
 Desktop provides all three via Electron's preload bridge. VS Code provides all three via postMessage. Website uses only terminal-free consumers.
 

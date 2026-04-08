@@ -28,10 +28,7 @@ interface TomomoApi {
       seed?: string;
     }
   ): Promise<AgentConfig>;
-  previewCharacter(
-    seed: string,
-    options?: { color?: string }
-  ): Promise<CharacterData>;
+  previewCharacter(seed: string): Promise<CharacterData>;
 
   // Onboarding intro state
   hasSeenIntro(): Promise<boolean>;

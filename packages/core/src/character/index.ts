@@ -6,6 +6,5 @@
 // etc.) or the renderer bundle will break.
 //
 // If you add a new export here, double-check its import graph is clean.
-export { CHARACTER_PALETTE, STARTER_COLORS, genCharacter } from "./character";
-export type { GenCharacterOptions } from "./character";
+export { CHARACTER_PALETTE, genCharacter } from "./character";
 export { AGENT_NAMES, generateAgentName } from "./names";
