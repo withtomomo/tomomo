@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { TomoSprite } from "../../components/tomo-sprite";
 import { Button } from "../../components/button";
 import { useUiIpc } from "../../ipc-context";
 import { useToast } from "../../stores/toast-store";
@@ -192,18 +191,7 @@ export function OnboardingFlow({
     const isLast = introStep === INTRO_STEPS.length - 1;
     return (
       <div className="flex h-full flex-1 flex-col p-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            {INTRO_STEPS.map((_, i) => (
-              <div
-                key={i}
-                className="h-1 w-5 rounded-full transition-colors duration-[120ms]"
-                style={{
-                  background: i === introStep ? "#5B6CFF" : "var(--bg-3)",
-                }}
-              />
-            ))}
-          </div>
+        <div className="flex items-center justify-end">
           <button
             type="button"
             onClick={() => void finishIntro()}
@@ -214,7 +202,6 @@ export function OnboardingFlow({
         </div>
 
         <div className="flex flex-1 flex-col items-center justify-center gap-8 text-center">
-          <TomoSprite size={180} animate />
           <StepComponent />
         </div>
 
@@ -227,6 +214,17 @@ export function OnboardingFlow({
             <ArrowLeft size={16} />
             Back
           </Button>
+          <div className="flex items-center gap-1.5">
+            {INTRO_STEPS.map((_, i) => (
+              <div
+                key={i}
+                className="h-1 w-5 rounded-full transition-colors duration-[120ms]"
+                style={{
+                  background: i === introStep ? "#5B6CFF" : "var(--bg-3)",
+                }}
+              />
+            ))}
+          </div>
           <Button
             onClick={nextIntroStep}
             style={{ background: "#5B6CFF", color: "#fff" }}

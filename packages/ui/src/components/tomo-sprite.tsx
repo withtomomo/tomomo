@@ -8,7 +8,11 @@ import { CharacterSprite } from "./character-sprite";
 // the CharacterSprite blink animation closes them (value 2 becomes body color
 // while blinking). The grid contains one intentional 1-pixel asymmetry on
 // row 10 col 4 vs col 13 that matches the brand icon.
-const TOMO_GRID: number[][] = [
+//
+// Exported so intro illustrations can render Tomo in a non-indigo context
+// (e.g., white-on-indigo inside a terminal card header). Prefer TomoSprite
+// for any standalone Tomo rendering — it locks the color to indigo.
+export const TOMO_GRID: number[][] = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],

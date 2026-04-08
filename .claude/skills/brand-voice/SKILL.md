@@ -85,16 +85,16 @@ Step 1: Hello!
   Welcome to the world of Tomomo. I'm Tomo, and I'll show you around.
 
 Step 2: Meet your agents
-  Agents are partners, not tools. Each one has a personality,
-  a voice, and a way of working all its own.
+  Build a team. One agent for every kind of work, each with its
+  own name, look, and personality.
 
 Step 3: Powered by anything
-  Your agents run on Claude Code, Codex, Gemini, or whatever you've
-  got installed. Tomomo handles the rest.
+  Claude Code, Codex, Gemini, or any CLI you've got. Tomomo runs
+  on top of all of them.
 
 Step 4: What makes them yours
-  Soul, skills, memory. You shape the soul. You teach the skills.
-  They keep the memories from every project.
+  Soul, skills, memory. You shape them, you teach them, and they
+  remember every project.
 
 Step 5: Launch them anywhere
   On any project, any folder, any repo. They code, write, research,
@@ -105,13 +105,16 @@ Step 6: Let's build your team
 ```
 
 Why these work:
-- Rule 1 (Partners, not tools): Step 2 opens with the rule verbatim.
-- Rule 3 (Alive, not generic): Step 2 closes with "all its own". Step 4 closes with "yours".
+
+- Rule 1 (Partners, not tools): Step 2 opens with "Build a team", framing agents as teammates without preaching the slogan.
+- Rule 2 (The bond matters): Step 4 closes with "every project you build together".
+- Rule 3 (Alive, not generic): Step 2 ends on "its own name, look, and personality". Step 4 title is "What makes them yours".
 - Rule 4 (Action, not features): Step 5 is pure action verbs. No mention of "persistent memory system".
 - Rule 5 (Universal, not dev-only): "code, write, research, plan, create" and "Do anything".
 - Rule 6 (Simple and bold): every body is two short sentences or fewer.
 
 CTAs in the flow:
+
 - `Next →` on steps 1-5, `Begin →` on step 6
 - Secondary: `Back ←` ghost button, disabled on step 1
 - Tertiary: `Skip intro` small text button top-right
@@ -120,7 +123,8 @@ CTAs in the flow:
 - Success toast: `{Name} is ready!`
 
 Replay intro entry point in Settings Help:
-```
+
+```text
 Replay intro
 Watch the welcome tour again     [Replay]
 ```

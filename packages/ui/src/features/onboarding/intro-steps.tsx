@@ -1,21 +1,32 @@
 import React from "react";
 import {
-  AgentIdentityIllustration,
-  RuntimePillRow,
-  PillarCardsRow,
-  MiniTerminalHeaderIllustration,
-  StarterTeaseIllustration,
+  HelloIllustration,
+  AgentsLineupIllustration,
+  RuntimeStackIllustration,
+  PillarsIllustration,
+  LaunchIllustration,
+  PickYourTeamIllustration,
 } from "./intro-illustrations";
 
-// Each step renders its optional illustration, title, and body. Tomo himself
-// is rendered by the parent OnboardingFlow orchestrator and stays mounted
-// across all steps so his idle animation is continuous.
+// Every intro step renders the same structure so title and body sit at the
+// exact same vertical position across all six slides:
+//   1. A fixed 560x300 illustration slot (SLOT_CLASS in intro-illustrations).
+//   2. A single-line text-4xl title.
+//   3. A text-lg body pinned to a 2-line minimum height so 1-line bodies
+//      reserve the same vertical space as 2-line bodies.
+// Every body MUST be two lines or fewer at the current max-w-md width.
+
+// Fixed 2-line vertical slot for the body, matching text-lg line-height
+// (roughly 1.75rem per line). 3.5rem = exactly 2 lines reserved.
+const BODY_CLASS = "text-fg-2 max-w-md text-lg min-h-[3.5rem]";
+const TITLE_CLASS = "text-fg-1 text-4xl font-bold tracking-tight";
 
 export function Step1Hello() {
   return (
     <>
-      <div className="text-fg-1 text-4xl font-bold tracking-tight">Hello!</div>
-      <div className="text-fg-2 max-w-md text-lg">
+      <HelloIllustration />
+      <div className={TITLE_CLASS}>Hello!</div>
+      <div className={BODY_CLASS}>
         Welcome to the world of Tomomo. I'm Tomo, and I'll show you around.
       </div>
     </>
@@ -25,13 +36,11 @@ export function Step1Hello() {
 export function Step2Agents() {
   return (
     <>
-      <AgentIdentityIllustration />
-      <div className="text-fg-1 text-4xl font-bold tracking-tight">
-        Meet your agents
-      </div>
-      <div className="text-fg-2 max-w-md text-lg">
-        Agents are partners, not tools. Each one has a personality, a voice, and
-        a way of working all its own.
+      <AgentsLineupIllustration />
+      <div className={TITLE_CLASS}>Meet your agents</div>
+      <div className={BODY_CLASS}>
+        Build a team. One agent for every kind of work, each with its own name,
+        look, and personality.
       </div>
     </>
   );
@@ -40,13 +49,11 @@ export function Step2Agents() {
 export function Step3Runtimes() {
   return (
     <>
-      <RuntimePillRow />
-      <div className="text-fg-1 text-4xl font-bold tracking-tight">
-        Powered by anything
-      </div>
-      <div className="text-fg-2 max-w-md text-lg">
-        Your agents run on Claude Code, Codex, Gemini, or whatever you've got
-        installed. Tomomo handles the rest.
+      <RuntimeStackIllustration />
+      <div className={TITLE_CLASS}>Powered by anything</div>
+      <div className={BODY_CLASS}>
+        Claude Code, Codex, Gemini, or any CLI you've got. Tomomo runs on top of
+        all of them.
       </div>
     </>
   );
@@ -55,13 +62,11 @@ export function Step3Runtimes() {
 export function Step4SoulSkillsMemory() {
   return (
     <>
-      <PillarCardsRow />
-      <div className="text-fg-1 text-4xl font-bold tracking-tight">
-        What makes them yours
-      </div>
-      <div className="text-fg-2 max-w-md text-lg">
-        Soul, skills, memory. You shape the soul. You teach the skills. They
-        keep the memories from every project.
+      <PillarsIllustration />
+      <div className={TITLE_CLASS}>What makes them yours</div>
+      <div className={BODY_CLASS}>
+        Soul, skills, memory. You shape them, you teach them, and they remember
+        every project.
       </div>
     </>
   );
@@ -70,11 +75,9 @@ export function Step4SoulSkillsMemory() {
 export function Step5LaunchAnywhere() {
   return (
     <>
-      <MiniTerminalHeaderIllustration />
-      <div className="text-fg-1 text-4xl font-bold tracking-tight">
-        Launch them anywhere
-      </div>
-      <div className="text-fg-2 max-w-md text-lg">
+      <LaunchIllustration />
+      <div className={TITLE_CLASS}>Launch them anywhere</div>
+      <div className={BODY_CLASS}>
         On any project, any folder, any repo. They code, write, research, plan,
         create. Do anything.
       </div>
@@ -85,13 +88,9 @@ export function Step5LaunchAnywhere() {
 export function Step6PickStarter() {
   return (
     <>
-      <StarterTeaseIllustration />
-      <div className="text-fg-1 text-4xl font-bold tracking-tight">
-        Let's build your team
-      </div>
-      <div className="text-fg-2 max-w-md text-lg">
-        Pick your first partner and get started.
-      </div>
+      <PickYourTeamIllustration />
+      <div className={TITLE_CLASS}>Let's build your team</div>
+      <div className={BODY_CLASS}>Pick your first partner and get started.</div>
     </>
   );
 }

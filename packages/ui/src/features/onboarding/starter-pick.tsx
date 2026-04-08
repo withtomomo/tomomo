@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ArrowRight } from "lucide-react";
-import { STARTER_COLORS } from "@tomomo/core/character";
+import { STARTER_COLORS, generateAgentName } from "@tomomo/core/character";
 import { CharacterSprite } from "../../components/character-sprite";
 import { Button } from "../../components/button";
 import { useUiIpc } from "../../ipc-context";
@@ -121,7 +121,7 @@ export function StarterPick({ seeds, onPick }: StarterPickProps) {
               className="flex flex-col items-center gap-3 border-none bg-transparent"
             >
               <div
-                className="relative flex items-center justify-center overflow-hidden rounded-[28px] transition-all duration-[200ms]"
+                className="relative flex flex-col items-center justify-center gap-5 overflow-hidden rounded-[28px] transition-all duration-[200ms]"
                 style={{
                   background: color,
                   width: isSelected ? 220 : 160,
@@ -143,6 +143,13 @@ export function StarterPick({ seeds, onPick }: StarterPickProps) {
                     displaySize={isSelected ? 104 : 64}
                     animate={isSelected}
                   />
+                </div>
+                <div
+                  className={`leading-none font-bold tracking-tight text-white transition-all duration-[200ms] ${
+                    isSelected ? "text-xl" : "text-sm"
+                  }`}
+                >
+                  {generateAgentName(opt.seed)}
                 </div>
               </div>
               <div

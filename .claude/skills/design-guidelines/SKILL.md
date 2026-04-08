@@ -31,19 +31,18 @@ Only shown on the user's first launch, gated by `introComplete` in `~/.tomomo/co
 Layout for every intro step:
 
 ```
-[step dots 1/6]                          [Skip intro]
+                                         [Skip intro]
 
-            Tomo 180 px, centered, idle-animated
-
-        [optional illustration row, real design-system atoms]
+          [step-specific large visual, centered]
 
                Title (text-4xl, bold, tracking-tight)
               Body (text-lg, fg-2, max-width 440 px)
 
-[Back ←]                            [Next → / Begin →]
+[Back ←]          [step dots 1/6]          [Next → / Begin →]
 ```
 
-- Tomo stays mounted across all 6 steps so the idle animation is continuous. No page transitions.
+- Step 1 renders Tomo at 240 px as the narrator opening, idle-animated. Steps 2-6 do NOT render Tomo; each one owns its own larger design-system illustration instead, so the illustrations can carry the screen without competing with the mascot.
+- No page transitions between steps.
 - Step progress dots: 22×4 px rounded-full pills. Active is indigo `#5B6CFF`, inactive is bg-3.
 - Primary button is indigo full flat background, white text, rounded-full. Reads "Next" on steps 1-5, "Begin" on step 6.
 - Back is `ghost` variant, disabled on step 1.
@@ -528,7 +527,7 @@ Character sizes:
 | Onboarding starter selected | 104px |
 | Onboarding starter idle     | 64px  |
 | Onboarding name screen      | 72px  |
-| Intro narrator (Tomo)       | 180px |
+| Intro narrator (Tomo step 1)| 240px |
 
 ### Tomo, the brand mascot
 
