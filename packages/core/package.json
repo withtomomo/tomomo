@@ -1,6 +1,6 @@
 {
   "name": "@tomomo/core",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Core business logic for Tomomo.",
   "private": true,
   "license": "MIT",

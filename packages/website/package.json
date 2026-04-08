@@ -1,6 +1,6 @@
 {
   "name": "@tomomo/website",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -12,8 +12,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@tomomo/core": "^0.0.1",
-    "@tomomo/ui": "^0.0.2",
+    "@tomomo/core": "^0.1.0",
+    "@tomomo/ui": "^0.1.0",
     "@vercel/analytics": "^2.0.1",
     "lucide-react": "^1.7.0",
     "next": "16.2.2",

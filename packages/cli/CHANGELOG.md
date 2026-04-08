@@ -1,4 +1,4 @@
-# @tomomo/website
+# @tomomo/cli
 
 ## 0.1.0
 
@@ -10,11 +10,3 @@
 
 - Updated dependencies [4d23677]
   - @tomomo/core@0.1.0
-  - @tomomo/ui@0.1.0
-
-## 0.0.2
-
-### Patch Changes
-
-- Updated dependencies [5f30420]
-  - @tomomo/ui@0.0.2
