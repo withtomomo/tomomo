@@ -16,7 +16,7 @@ Requires Node.js 22+.
 
 ### Interactive Mode
 
-Running `tomomo` with no arguments opens the interactive terminal UI (built with Ink/React). From there you can browse your agents, create new ones, and launch them.
+Running `tomomo` with no arguments opens the interactive terminal UI (built with Ink/React). From there you can browse your agents, create new ones, and launch them. On first launch, the CLI walks you through picking a starter character and naming your first agent. The name input is prefilled with a short deterministic suggestion derived from the character's seed, so you can press Enter to accept "Momo" or type to override.
 
 ```bash
 tomomo
@@ -248,6 +248,8 @@ import {
   genCharacter,
   renderCharacterToTerminal,
   CHARACTER_PALETTE,
+  AGENT_NAMES,
+  generateAgentName,
 
   // Config
   loadConfig,

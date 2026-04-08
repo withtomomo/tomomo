@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -49,5 +49,71 @@ describe("config", () => {
     expect(loaded.adapters["gemini"]).toEqual({
       package: "tomomo-adapter-gemini",
     });
+  });
+
+  it("migrates introComplete to true for existing users who completed onboarding", async () => {
+    await writeFile(
+      join(testDir, "config.json"),
+      JSON.stringify({
+        version: 1,
+        defaults: {
+          runtime: "claude-code",
+          model: "sonnet",
+          memoryBudget: { agentMemoryChars: 8000, projectMemoryChars: 8000 },
+          compactionThresholdBytes: 51200,
+        },
+        adapters: {},
+        onboardingComplete: true,
+        // introComplete intentionally missing
+        logLevel: "info",
+      })
+    );
+    const { loadConfig } = await import("./config");
+    const config = await loadConfig();
+    expect(config.introComplete).toBe(true);
+  });
+
+  it("migrates introComplete to false for users who never completed onboarding", async () => {
+    await writeFile(
+      join(testDir, "config.json"),
+      JSON.stringify({
+        version: 1,
+        defaults: {
+          runtime: "claude-code",
+          model: "sonnet",
+          memoryBudget: { agentMemoryChars: 8000, projectMemoryChars: 8000 },
+          compactionThresholdBytes: 51200,
+        },
+        adapters: {},
+        onboardingComplete: false,
+        // introComplete intentionally missing
+        logLevel: "info",
+      })
+    );
+    const { loadConfig } = await import("./config");
+    const config = await loadConfig();
+    expect(config.introComplete).toBe(false);
+  });
+
+  it("preserves introComplete when already present in config", async () => {
+    await writeFile(
+      join(testDir, "config.json"),
+      JSON.stringify({
+        version: 1,
+        defaults: {
+          runtime: "claude-code",
+          model: "sonnet",
+          memoryBudget: { agentMemoryChars: 8000, projectMemoryChars: 8000 },
+          compactionThresholdBytes: 51200,
+        },
+        adapters: {},
+        onboardingComplete: true,
+        introComplete: false,
+        logLevel: "info",
+      })
+    );
+    const { loadConfig } = await import("./config");
+    const config = await loadConfig();
+    expect(config.introComplete).toBe(false);
   });
 });

@@ -94,4 +94,63 @@ describe("onboarding", () => {
 
     expect(await isOnboarded()).toBe(true);
   });
+
+  it("hasSeenIntro returns false by default", async () => {
+    const { hasSeenIntro } = await import("./onboarding");
+    expect(await hasSeenIntro()).toBe(false);
+  });
+
+  it("markIntroComplete sets the flag", async () => {
+    const { hasSeenIntro, markIntroComplete } = await import("./onboarding");
+    await markIntroComplete();
+    expect(await hasSeenIntro()).toBe(true);
+  });
+
+  it("markIntroComplete is idempotent", async () => {
+    const { hasSeenIntro, markIntroComplete } = await import("./onboarding");
+    await markIntroComplete();
+    await markIntroComplete();
+    expect(await hasSeenIntro()).toBe(true);
+  });
+
+  it("hasSeenIntro returns true for old configs missing introComplete (migration)", async () => {
+    const { writeFile, mkdir } = await import("node:fs/promises");
+    const { getConfigPath } = await import("../paths");
+    const { hasSeenIntro } = await import("./onboarding");
+
+    // Simulate an upgraded user: pre-introComplete config on disk with
+    // onboardingComplete already set.
+    await mkdir(testDir, { recursive: true });
+    await writeFile(
+      getConfigPath(),
+      JSON.stringify({ onboardingComplete: true })
+    );
+
+    expect(await hasSeenIntro()).toBe(true);
+  });
+
+  it("hasSeenIntro returns false for old configs that never onboarded", async () => {
+    const { writeFile, mkdir } = await import("node:fs/promises");
+    const { getConfigPath } = await import("../paths");
+    const { hasSeenIntro } = await import("./onboarding");
+
+    await mkdir(testDir, { recursive: true });
+    await writeFile(
+      getConfigPath(),
+      JSON.stringify({ onboardingComplete: false })
+    );
+
+    expect(await hasSeenIntro()).toBe(false);
+  });
+
+  it("runOnboarding sets both onboardingComplete and introComplete", async () => {
+    const { runOnboarding } = await import("./onboarding");
+    const { loadConfig } = await import("./config");
+
+    await runOnboarding();
+
+    const config = await loadConfig();
+    expect(config.onboardingComplete).toBe(true);
+    expect(config.introComplete).toBe(true);
+  });
 });

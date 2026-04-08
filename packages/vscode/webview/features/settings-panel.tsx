@@ -13,6 +13,9 @@ import type { RuntimeInfo } from "../types";
 
 interface SettingsPanelProps {
   onBack: () => void;
+  // Triggered when the user clicks "Replay intro". The parent is expected to
+  // close the settings panel and open the OnboardingFlow in forceIntro mode.
+  onReplayIntro: () => void;
 }
 
 // Collapsible section
@@ -50,7 +53,7 @@ function Section({
   );
 }
 
-export function SettingsPanel({ onBack }: SettingsPanelProps) {
+export function SettingsPanel({ onBack, onReplayIntro }: SettingsPanelProps) {
   const { settings, updateSettings } = useSettings();
   const { theme, toggleTheme } = useTheme();
   const { toast } = useToast();
@@ -224,6 +227,21 @@ export function SettingsPanel({ onBack }: SettingsPanelProps) {
               disabled={!adapterPackage.trim() || installingAdapter}
             >
               {installingAdapter ? "..." : "Install"}
+            </Button>
+          </div>
+        </Section>
+
+        {/* Help */}
+        <Section title="Help">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-fg-1 text-xs font-medium">Replay intro</div>
+              <div className="text-fg-3 mt-0.5 text-[10px]">
+                Watch the welcome tour again
+              </div>
+            </div>
+            <Button size="sm" variant="ghost" onClick={onReplayIntro}>
+              Replay
             </Button>
           </div>
         </Section>

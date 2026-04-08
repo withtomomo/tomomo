@@ -9,6 +9,7 @@ import {
   createAgent,
   slugifyName,
   agentExists,
+  generateAgentName,
 } from "@tomomo/core";
 import type { RuntimeCheckResult, CharacterData } from "@tomomo/core";
 
@@ -25,12 +26,14 @@ type Step = "init" | "runtimes" | "pick" | "name" | "creating" | "done";
 
 function TextInputField({
   placeholder,
+  initialValue = "",
   onSubmit,
 }: {
   placeholder: string;
+  initialValue?: string;
   onSubmit: (value: string) => void;
 }) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(initialValue);
 
   useInput((input, key) => {
     if (key.return) {
@@ -79,11 +82,18 @@ export function OnboardingScreen({ onComplete }: OnboardingProps) {
         const results = await checkRuntimes();
         setRuntimes(results);
 
-        // Generate 3 random characters
+        // Generate 3 starter characters whose natural seed-derived colors
+        // are all distinct, so the three cards never share a color and
+        // the color the user sees matches the color the agent will have
+        // after creation. Three unique colors out of the 8-color palette
+        // is trivially fast; the attempt cap is just a safety net.
         const chars: CharacterOption[] = [];
-        for (let i = 0; i < 3; i++) {
+        const usedColors = new Set<string>();
+        for (let attempts = 0; attempts < 200 && chars.length < 3; attempts++) {
           const seed = crypto.randomUUID();
           const character = genCharacter(seed);
+          if (usedColors.has(character.color)) continue;
+          usedColors.add(character.color);
           chars.push({ seed, character });
         }
         setOptions(chars);
@@ -223,6 +233,7 @@ export function OnboardingScreen({ onComplete }: OnboardingProps) {
         <Box marginTop={1}>
           <Text>Name: </Text>
           <TextInputField
+            initialValue={generateAgentName(chosenOption!.seed)}
             placeholder="e.g. WebDev, Reviewer, Writer..."
             onSubmit={handleNameSubmit}
           />

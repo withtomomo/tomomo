@@ -180,6 +180,10 @@ export const ipc = {
         size: number;
       }>,
   },
+  intro: {
+    hasSeen: () => request("intro.hasSeen") as Promise<boolean>,
+    markSeen: () => request("intro.markSeen") as Promise<void>,
+  },
   app: {
     selectDirectory: () =>
       request("app.selectDirectory") as Promise<string | null>,
@@ -235,5 +239,12 @@ export const uiIpc: UiIpc = {
       ipc.terminal.resize(sessionId, cols, rows),
     onData: (cb) => ipc.terminal.onData(cb),
     onExit: (cb) => ipc.terminal.onExit(cb),
+  },
+  intro: {
+    hasSeen: () => ipc.intro.hasSeen(),
+    markSeen: () => ipc.intro.markSeen(),
+  },
+  character: {
+    preview: (seed) => ipc.character.preview(seed),
   },
 };

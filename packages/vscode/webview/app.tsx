@@ -11,6 +11,8 @@ import {
   getStoredValue,
   setStoredValue,
   disposeTerminal,
+  OnboardingFlow,
+  CreateAgentScreen,
 } from "@tomomo/ui";
 import type { TerminalSession } from "@tomomo/ui";
 import type { AgentConfig } from "@tomomo/core";
@@ -20,7 +22,17 @@ import { AgentsView } from "./features/agents-view";
 import { HubView } from "./features/hub-view";
 import { SettingsPanel } from "./features/settings-panel";
 import { InstallAgent } from "./features/install-agent";
-import { CreateAgentScreen } from "./features/onboarding";
+import { Breadcrumb } from "./features/breadcrumb";
+
+// Thin adapter around ipc.agents.create so OnboardingFlow and CreateAgentScreen
+// only need the { id } shape they care about.
+async function createAgentAdapter(
+  name: string,
+  options: { runtime: string; seed: string }
+): Promise<{ id: string }> {
+  const created = (await ipc.agents.create(name, options)) as AgentConfig;
+  return { id: created.id };
+}
 
 function useVsCodeTheme() {
   const [theme, setTheme] = useState<"dark" | "light">(() => {
@@ -66,10 +78,27 @@ function AppLayout() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [installOpen, setInstallOpen] = useState(false);
+  // Session-only replay overlay for the intro. Triggered from Settings.
+  // Opening it does NOT reset the persisted introComplete flag.
+  const [replayIntroOpen, setReplayIntroOpen] = useState(false);
 
   const { data: agents, refetch: refetchAgents } = useIpcQuery<AgentConfig[]>(
     () => ipc.agents.list() as Promise<AgentConfig[]>
   );
+
+  const { data: runtimesData } = useIpcQuery<
+    Array<{ name: string; available: boolean }>
+  >(
+    () =>
+      ipc.runtimes.check() as Promise<
+        Array<{ name: string; available: boolean }>
+      >
+  );
+  // `runtimesData === null` means the first fetch is still in flight.
+  // Distinguishing that from "fetch returned empty" is what drives the
+  // NameYourAgent loading vs empty vs ready states.
+  const runtimes = runtimesData ?? [];
+  const runtimesLoaded = runtimesData !== null;
 
   // Check if onboarding should show (no agents, no sessions, on agents view)
   const showOnboarding =
@@ -79,7 +108,8 @@ function AppLayout() {
     activeView === "agents" &&
     !settingsOpen &&
     !createOpen &&
-    !installOpen;
+    !installOpen &&
+    !replayIntroOpen;
 
   // Auto-select: last used agent, or most recent, or first available
   useEffect(() => {
@@ -206,14 +236,35 @@ function AppLayout() {
     loadedIds.current.clear();
   };
 
-  // Render overlay views (settings, create, install)
-  const hasOverlay = settingsOpen || createOpen || installOpen;
+  // Render overlay views (replay intro, settings, create, install)
+  const hasOverlay =
+    replayIntroOpen || settingsOpen || createOpen || installOpen;
 
   if (hasOverlay) {
+    if (replayIntroOpen) {
+      return (
+        <div className="flex h-full w-full flex-col overflow-hidden">
+          <OnboardingFlow
+            forceIntro
+            runtimes={runtimes}
+            runtimesLoaded={runtimesLoaded}
+            onCreateAgent={createAgentAdapter}
+            onClose={() => setReplayIntroOpen(false)}
+          />
+        </div>
+      );
+    }
+
     if (settingsOpen) {
       return (
         <div className="flex h-full w-full flex-col overflow-hidden">
-          <SettingsPanel onBack={() => setSettingsOpen(false)} />
+          <SettingsPanel
+            onBack={() => setSettingsOpen(false)}
+            onReplayIntro={() => {
+              setSettingsOpen(false);
+              setReplayIntroOpen(true);
+            }}
+          />
         </div>
       );
     }
@@ -221,8 +272,11 @@ function AppLayout() {
     if (createOpen) {
       return (
         <div className="flex h-full w-full flex-col overflow-hidden">
+          <Breadcrumb title="New agent" onBack={() => setCreateOpen(false)} />
           <CreateAgentScreen
-            mode="add"
+            runtimes={runtimes}
+            runtimesLoaded={runtimesLoaded}
+            onCreateAgent={createAgentAdapter}
             onCancel={() => setCreateOpen(false)}
             onCreated={(agentId) => {
               setCreateOpen(false);
@@ -249,12 +303,25 @@ function AppLayout() {
     }
   }
 
+  // Wait for the first agents fetch to resolve before deciding which view to
+  // render. Without this, a brand-new user would briefly see an empty
+  // AgentsView flash before the onboarding intro mounts.
+  if (agents === null) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <p className="text-fg-2 text-sm">Loading...</p>
+      </div>
+    );
+  }
+
   // Show onboarding when no agents exist
   if (showOnboarding) {
     return (
       <div className="flex h-full w-full flex-col overflow-hidden">
-        <CreateAgentScreen
-          mode="onboarding"
+        <OnboardingFlow
+          runtimes={runtimes}
+          runtimesLoaded={runtimesLoaded}
+          onCreateAgent={createAgentAdapter}
           onCreated={(agentId) => {
             setSelectedAgentId(agentId);
             handleRefetch();

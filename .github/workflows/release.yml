@@ -65,6 +65,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Tag Website Release
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          VERSION=$(node -p "require('./packages/website/package.json').version")
+          TAG="website@$VERSION"
+          if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+            git tag "$TAG"
+            git push origin "$TAG"
+            gh release create "$TAG" --title "Tomomo Website $VERSION" --generate-notes
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check Desktop version
         id: desktop-tag
         if: steps.changesets.outputs.hasChangesets == 'false'

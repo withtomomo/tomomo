@@ -81,6 +81,16 @@ const handlers: Record<string, Handler> = {
     return core.genCharacter(seed);
   },
 
+  "intro.hasSeen": async () => {
+    const core = await getCore();
+    return core.hasSeenIntro();
+  },
+
+  "intro.markSeen": async () => {
+    const core = await getCore();
+    await core.markIntroComplete();
+  },
+
   "agents.update": async (args) => {
     const core = await getCore();
     const id = requireArg<string>(args, 0, "id");

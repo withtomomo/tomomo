@@ -7,6 +7,9 @@ import { Minus, Plus, Sun, Moon, ChevronRight, Copy } from "lucide-react";
 interface SettingsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  // Triggered when the user clicks "Replay intro". The parent is expected to
+  // close the modal and open the OnboardingFlow in forceIntro mode.
+  onReplayIntro: () => void;
 }
 
 // Collapsible section
@@ -44,7 +47,11 @@ function Section({
   );
 }
 
-export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
+export function SettingsModal({
+  open,
+  onOpenChange,
+  onReplayIntro,
+}: SettingsModalProps) {
   const { settings, updateSettings } = useSettings();
   const { theme, toggleTheme } = useTheme();
   const { toast } = useToast();
@@ -210,6 +217,21 @@ export function SettingsModal({ open, onOpenChange }: SettingsModalProps) {
               disabled={!adapterPackage.trim() || installingAdapter}
             >
               {installingAdapter ? "Installing..." : "Install"}
+            </Button>
+          </div>
+        </Section>
+
+        {/* Help */}
+        <Section title="Help">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-fg-1 text-sm font-medium">Replay intro</div>
+              <div className="text-fg-3 mt-0.5 text-xs">
+                Watch the welcome tour again
+              </div>
+            </div>
+            <Button size="sm" variant="ghost" onClick={onReplayIntro}>
+              Replay
             </Button>
           </div>
         </Section>

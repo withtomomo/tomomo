@@ -14,6 +14,7 @@
   "dependencies": {
     "@tomomo/core": "^0.0.1",
     "@tomomo/ui": "^0.0.2",
+    "@vercel/analytics": "^2.0.1",
     "lucide-react": "^1.7.0",
     "next": "16.2.2",
     "react": "^19.2.4",

@@ -7,6 +7,10 @@ export function useRuntimes() {
   );
   return {
     runtimes: data ?? [],
+    // `loaded` distinguishes "first fetch in flight" from "fetch resolved but
+    // returned an empty list". Consumers that need to tell those two states
+    // apart (e.g. NameYourAgent) should prefer this over `loading`.
+    loaded: data !== null,
     loading,
     error,
     refetch,

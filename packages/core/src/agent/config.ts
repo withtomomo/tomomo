@@ -8,20 +8,29 @@ export async function loadConfig(): Promise<GlobalConfig> {
   if (!config) {
     return { ...DEFAULT_CONFIG };
   }
+
+  // Read-side migration: if introComplete is missing from an older config,
+  // default it to the onboardingComplete value so existing users who already
+  // finished onboarding do not see the intro, while brand-new users do.
+  const migrated = { ...config };
+  if (migrated.introComplete === undefined) {
+    migrated.introComplete = migrated.onboardingComplete ?? false;
+  }
+
   const merged = {
     ...DEFAULT_CONFIG,
-    ...config,
+    ...migrated,
     defaults: {
       ...DEFAULT_CONFIG.defaults,
-      ...config.defaults,
+      ...migrated.defaults,
       memoryBudget: {
         ...DEFAULT_CONFIG.defaults.memoryBudget,
-        ...config.defaults?.memoryBudget,
+        ...migrated.defaults?.memoryBudget,
       },
     },
     adapters: {
       ...DEFAULT_CONFIG.adapters,
-      ...config.adapters,
+      ...migrated.adapters,
     },
   };
 

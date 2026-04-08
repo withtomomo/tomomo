@@ -9,6 +9,8 @@ import {
   ToastViewport,
   Modal,
   Button,
+  OnboardingFlow,
+  CreateAgentScreen,
 } from "@tomomo/ui";
 import type { UiIpc } from "@tomomo/ui";
 import { Titlebar } from "./features/titlebar/titlebar";
@@ -16,7 +18,6 @@ import { AgentHero } from "./features/agent-hero/agent-hero";
 import { AgentSidebar } from "./features/agent-sidebar/agent-sidebar";
 import { Hub, useLayoutPreset } from "./features/hub/hub";
 import { SettingsModal } from "./features/settings/settings-modal";
-import { CreateAgentScreen } from "./features/create-agent-screen/create-agent-screen";
 import { InstallAgentModal } from "./features/install-agent/install-agent-modal";
 import { LaunchAgentModal } from "./components/launch-agent-modal";
 import { ipc } from "./lib/ipc";
@@ -24,6 +25,17 @@ import { useAgents } from "./hooks/use-agents";
 import { useCharacters } from "./hooks/use-characters";
 import { useSessions } from "./hooks/use-sessions";
 import { useModals } from "./hooks/use-modals";
+import { useRuntimes } from "./hooks/use-runtimes";
+
+// Thin adapter around ipc.agents.create so OnboardingFlow and CreateAgentScreen
+// only need the { id } shape they care about.
+async function createAgentAdapter(
+  name: string,
+  options: { runtime: string; seed: string }
+): Promise<{ id: string }> {
+  const created = await ipc.agents.create(name, options);
+  return { id: created.id };
+}
 
 const desktopUiIpc: UiIpc = {
   terminal: {
@@ -32,6 +44,13 @@ const desktopUiIpc: UiIpc = {
       ipc.terminal.resize(sessionId, cols, rows),
     onData: (cb) => ipc.terminal.onData(cb),
     onExit: (cb) => ipc.terminal.onExit(cb),
+  },
+  intro: {
+    hasSeen: () => ipc.intro.hasSeen(),
+    markSeen: () => ipc.intro.markSeen(),
+  },
+  character: {
+    preview: (seed) => ipc.character.preview(seed),
   },
 };
 
@@ -42,11 +61,15 @@ function AppLayout() {
   const { characters, clearCache } = useCharacters(agents);
   const { sessions, createSession, closeSession, reorderSessions } =
     useSessions(agents, characters);
+  const { runtimes, loaded: runtimesLoaded } = useRuntimes();
   const modals = useModals();
   const [activeTab, setActiveTab] = useState<
     "overview" | "soul" | "skills" | "mcp" | "memory" | "settings"
   >("overview");
   const [activeView, setActiveView] = useState<"agents" | "hub">("agents");
+  // Session-only replay overlay for the intro. Triggered from Settings.
+  // Opening it does NOT reset the persisted introComplete flag.
+  const [replayIntroOpen, setReplayIntroOpen] = useState(false);
   const {
     layout,
     select: selectLayout,
@@ -171,8 +194,10 @@ function AppLayout() {
       agents.length === 0 &&
       sessions.length === 0 &&
       activeView === "agents" ? (
-        <CreateAgentScreen
-          mode="onboarding"
+        <OnboardingFlow
+          runtimes={runtimes}
+          runtimesLoaded={runtimesLoaded}
+          onCreateAgent={createAgentAdapter}
           onCreated={(newAgentId) => {
             refetchAgents();
             clearCache();
@@ -278,7 +303,9 @@ function AppLayout() {
       {modals.createAgentOpen && (
         <div className="bg-bg-0 absolute inset-0 z-50 flex">
           <CreateAgentScreen
-            mode="add"
+            runtimes={runtimes}
+            runtimesLoaded={runtimesLoaded}
+            onCreateAgent={createAgentAdapter}
             onCreated={(newAgentId) => {
               modals.setCreateAgentOpen(false);
               refetchAgents();
@@ -286,6 +313,17 @@ function AppLayout() {
               setSelectedAgentId(newAgentId);
             }}
             onCancel={() => modals.setCreateAgentOpen(false)}
+          />
+        </div>
+      )}
+      {replayIntroOpen && (
+        <div className="bg-bg-0 absolute inset-0 z-50 flex">
+          <OnboardingFlow
+            forceIntro
+            runtimes={runtimes}
+            runtimesLoaded={runtimesLoaded}
+            onCreateAgent={createAgentAdapter}
+            onClose={() => setReplayIntroOpen(false)}
           />
         </div>
       )}
@@ -300,6 +338,10 @@ function AppLayout() {
       <SettingsModal
         open={modals.settingsOpen}
         onOpenChange={modals.setSettingsOpen}
+        onReplayIntro={() => {
+          modals.setSettingsOpen(false);
+          setReplayIntroOpen(true);
+        }}
       />
     </div>
   );

@@ -63,6 +63,10 @@ export const ipc = {
   character: {
     preview: (seed: string) => window.api.previewCharacter(seed),
   },
+  intro: {
+    hasSeen: () => window.api.hasSeenIntro(),
+    markSeen: () => window.api.markIntroSeen(),
+  },
   app: {
     selectDirectory: () => window.api.selectDirectory(),
   },

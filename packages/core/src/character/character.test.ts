@@ -55,3 +55,13 @@ describe("genCharacter", () => {
     });
   });
 });
+
+describe("genCharacter RNG stability", () => {
+  it("keeps the RNG sequence stable for backwards compatibility", () => {
+    // Snapshots the grid for a fixed seed so future changes to the
+    // generation algorithm are caught before they silently drift the
+    // shapes rendered for existing on-disk agents.
+    const result = genCharacter("regression-guard-seed-1");
+    expect(result.grid).toMatchSnapshot();
+  });
+});

@@ -68,6 +68,16 @@ export function registerIpcHandlers(): void {
     return core.genCharacter(seed);
   });
 
+  ipcMain.handle("intro:hasSeen", async () => {
+    const core = await getCore();
+    return core.hasSeenIntro();
+  });
+
+  ipcMain.handle("intro:markSeen", async () => {
+    const core = await getCore();
+    await core.markIntroComplete();
+  });
+
   ipcMain.handle(
     "agents:update",
     async (
